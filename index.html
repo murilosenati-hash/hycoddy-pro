@@ -3573,7 +3573,7 @@ getAssetRegistry()         // Pacotes de Data Assets</pre>
       },
       chatfilter: {
         "src/main/java/MeuPlugin.java": `package com.tomy.chatguard;\n\nimport com.hypixel.hytale.server.core.plugin.JavaPlugin;\n\npublic class MeuPlugin extends JavaPlugin {\n  @Override\n  protected void setup() {\n    EventRegistry events = getEventRegistry();\n    // Registra o listener da aba ChatGuardListener.java na prioridade FIRST:\n    ChatGuardListener listener = new ChatGuardListener();\n    events.register(\n      EventPriority.FIRST,\n      ChatEvent.class,\n      listener::filtrarSpam\n    );\n  }\n}`,
-        "src/main/java/ChatGuardListener.java": `package com.tomy.chatguard;\n\npublic class ChatGuardListener {\n  // Palavra proibida para testar no filtro:\n  private String palavraProibida = "spam";\n\n  public void filtrarSpam(ChatEvent event) {\n    if (event.getMessage().contains(palavraProibida)) {\n      event.setCancelled(true);\n      System.out.println("Mensagem bloqueada na prioridade FIRST!");\n    }\n  }\n}`,
+        "src/main/java/ChatGuardListener.java": `package com.tomy.chatguard;\n\npublic class ChatGuardListener {\n  // Lista (Array) de palavras proibidas para testar no filtro:\n  private String[] palavrasProibidas = {"spam", "chato", "ridiculo", "bobao"};\n\n  public void filtrarSpam(ChatEvent event) {\n    String msg = event.getMessage().toLowerCase();\n    for (String proibida : palavrasProibidas) {\n      if (msg.contains(proibida)) {\n        event.setCancelled(true);\n        System.out.println("Mensagem bloqueada na prioridade FIRST!");\n        break;\n      }\n    }\n  }\n}`,
         "src/main/resources/manifest.json": `{\n  "Group": "TomyStudios",\n  "Name": "ChatGuardFIRST",\n  "Version": "1.2.0",\n  "Main": "com.tomy.chatguard.MeuPlugin"\n}`,
         "Common/UI/ServerHub.ui": `<Panel title="Painel de Moderação">\n  <Label text="Filtro FIRST Ativo no Chat" />\n  <Button text="Limpar Histórico" onClick="meuPlugin.limparChat" />\n</Panel>`,
         "Server/Items/item_data.json": `{\n  "type": "item",\n  "id": "tomy:cajado_silencio",\n  "name": "Cajado do Moderador",\n  "damage": 15,\n  "durability": 500\n}`
@@ -3991,12 +3991,22 @@ getAssetRegistry()         // Pacotes de Data Assets</pre>
       } else {
         appendConsoleLog(`>> [Chat] <${state.username}>: ${raw}`, "text-duo-gold");
         if (allJava.includes("EventPriority.FIRST")) {
-          const forbiddenMatch = allJava.match(/palavraProibida\s*=\s*"([^"]+)"/);
-          const forbiddenWord = forbiddenMatch ? forbiddenMatch[1] : "spam";
-          if (raw.toLowerCase().includes(forbiddenWord.toLowerCase())) {
-            appendConsoleLog(`[ChatGuardListener FIRST] 🚫 Mensagem BLOQUEADA! Contém a palavra proibida "${forbiddenWord}".`, "text-duo-red font-bold");
+          // Extrai todas as palavras entre aspas declaradas em palavraProibida ou palavrasProibidas (suporta String única, vírgulas ou Array {})
+          const listenerCode = SANDBOX_FILES["src/main/java/ChatGuardListener.java"] || allJava;
+          const varLineMatch = listenerCode.match(/palavra[s]?Proibida[s]?[\s\S]*?;/i);
+          let forbiddenList = ["spam"];
+          if (varLineMatch) {
+            const quotedWords = [...varLineMatch[0].matchAll(/"([^"]+)"/g)]
+              .map(m => m[1].trim())
+              .filter(Boolean);
+            if (quotedWords.length > 0) forbiddenList = quotedWords;
+          }
+
+          const matchedWord = forbiddenList.find(w => raw.toLowerCase().includes(w.toLowerCase()));
+          if (matchedWord) {
+            appendConsoleLog(`[ChatGuardListener FIRST] 🚫 Mensagem BLOQUEADA! Contém a palavra proibida "${matchedWord}".`, "text-duo-red font-bold");
           } else {
-            appendConsoleLog(`[ChatGuardListener FIRST] ✅ Mensagem aprovada pelo filtro anti-spam.`, "text-emerald-400");
+            appendConsoleLog(`[ChatGuardListener FIRST] ✅ Mensagem aprovada pelo filtro anti-spam (Verificadas: ${forbiddenList.join(", ")}).`, "text-emerald-400");
           }
         }
       }
