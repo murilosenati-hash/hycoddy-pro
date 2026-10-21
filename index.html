@@ -160,6 +160,11 @@
     </div>
 
     <div class="flex items-center space-x-1.5 md:space-x-2">
+      <!-- NOVO: ÍCONE DE OFENSIVA (FOGO) -->
+      <div class="flex items-center space-x-1 bg-duo-bg px-2.5 py-1.5 rounded-xl border border-duo-border" title="Ofensiva (Dias Seguidos)">
+        <i class="ph-fill ph-fire text-orange-500 text-sm"></i>
+        <span id="hud-streak" class="font-extrabold text-xs text-orange-400">0</span>
+      </div>
       <button onclick="toggleSound()" class="bg-duo-bg hover:border-duo-cyan px-2 py-1.5 rounded-xl border border-duo-border text-duo-cyan text-xs font-bold transition" title="Sons Rúnicos">
         <i id="icon-sound" class="ph-fill ph-speaker-high text-sm"></i>
       </button>
@@ -578,6 +583,31 @@
         </div>
 
         <div class="space-y-4">
+          <!-- NOVO: CALENDÁRIO DE OFENSIVA -->
+          <div class="runic-panel rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase text-orange-400 flex items-center gap-1"><i class="ph-fill ph-fire"></i> Ofensiva HyCoddy</span>
+                <h3 class="text-sm font-extrabold text-white">Dias Seguidos Estudando</h3>
+              </div>
+              <div class="text-2xl font-black text-orange-500 drop-shadow-md"><span id="profile-streak-number">0</span> 🔥</div>
+            </div>
+            <div class="bg-duo-bg border border-duo-border rounded-xl p-3 flex justify-between" id="profile-calendar-days">
+              <!-- Os dias da semana são gerados pelo JavaScript aqui! -->
+            </div>
+            <!-- NOVO: Frase corrigida e Seletor de Meta Diária -->
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-[10px] text-gray-400">1 lição = acende a chama 🔥</span>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[10px] text-gray-400 font-bold uppercase">Meta Diária:</span>
+                <select id="profile-goal-select" onchange="changeDailyGoal(this.value)" class="bg-duo-card border border-duo-border rounded-lg px-2 py-1 text-[10px] font-extrabold text-duo-cyan outline-none cursor-pointer">
+                  <option value="2">2 Capítulos</option>
+                  <option value="4">4 Capítulos</option>
+                  <option value="6">6 Capítulos</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <div class="runic-panel rounded-2xl p-4 space-y-3">
             <div class="flex items-center justify-between">
               <h3 class="text-sm font-extrabold text-white flex items-center gap-1.5">
@@ -890,6 +920,9 @@
       shieldActive: false,
       editorTheme: 'default',
       unlockedLevel: 10,
+      streak: 0,
+      lastStreakDate: "",
+      activeDays: [],
       completedLevels: [1, 2, 3, 4, 5, 6, 7],
       completedKnowledge: [1, 2, 3, 4, 5, 6, 7],
       completedQuizzes: [1, 2, 3, 4, 5, 6, 7],
@@ -2258,6 +2291,11 @@
       if (statDone) statDone.innerText = `${doneCount}/100`;
       if (statXp) statXp.innerText = state.xp;
       if (statGems) statGems.innerText = state.gems;
+      if (document.getElementById("hud-streak")) document.getElementById("hud-streak").innerText = state.streak || 0;
+      if (document.getElementById("profile-streak-number")) document.getElementById("profile-streak-number").innerText = state.streak || 0;
+      if (typeof renderCalendar === "function") renderCalendar();
+      const goalSelect = document.getElementById("profile-goal-select");
+      if (goalSelect) goalSelect.value = state.dailyGoal || 2;
     }
 
     function showToast(msg) {
@@ -2522,6 +2560,9 @@
           renderKnowledgeChunk();
         } else {
           playRunicSound('success');
+          checkDailyReset();
+          // REMOVIDO: A teoria não acende mais a chama!
+
           if (!state.completedKnowledge.includes(ch.id)) state.completedKnowledge.push(ch.id);
           state.hearts = Math.min(state.maxHearts, state.hearts + 1);
           state.xp += state.xpBoost ? 10 : 5;
@@ -2539,6 +2580,8 @@
         } else {
           playRunicSound('success');
           checkDailyReset();
+          registerDailyActivity(); // 🔥 ACENDE A CHAMA APENAS AQUI! (Ao terminar o Quiz)
+
           const first = !state.completedQuizzes.includes(ch.id);
           if (first) state.completedQuizzes.push(ch.id);
           const mult = state.xpBoost ? 2 : 1;
@@ -3210,6 +3253,75 @@
         showToast("☁️ Progresso da nuvem carregado!");
       } catch (e) {
         showToast("❌ Erro ao baixar Gist.");
+      }
+    }
+
+    function changeDailyGoal(val) {
+      state.dailyGoal = Number(val);
+      saveProgress();
+      updateHUD();
+      showToast(`🎯 Meta diária alterada para ${val} capítulos!`);
+    }
+
+    function registerDailyActivity() {
+      const todayStr = getTodayLocalStr();
+      if (!state.activeDays) state.activeDays = [];
+      
+      // Só roda se for a PRIMEIRA lição do dia
+      if (!state.activeDays.includes(todayStr)) {
+        state.activeDays.push(todayStr); // Marca o dia de hoje no calendário
+        
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+        
+        if (state.lastStreakDate === yStr) {
+          state.streak = (state.streak || 0) + 1; // Fez ontem, a ofensiva cresce!
+        } else if (state.lastStreakDate !== todayStr) {
+          state.streak = 1; // Pulou um dia, recomeça do 1
+        }
+        state.lastStreakDate = todayStr;
+      }
+    }
+
+    function renderCalendar() {
+      const calBox = document.getElementById("profile-calendar-days");
+      if (!calBox) return;
+      calBox.innerHTML = "";
+      
+      const today = new Date();
+      const currentDay = today.getDay(); // 0 (Dom) a 6 (Sab)
+      const weekDays = ["D", "S", "T", "Q", "Q", "S", "S"];
+      
+      // Monta os últimos 7 dias focados na semana atual
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - (currentDay - i));
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        
+        const isToday = i === currentDay;
+        const isFuture = i > currentDay;
+        const isDone = state.activeDays?.includes(dateStr);
+        
+        let circleClass = "w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all ";
+        if (isFuture) {
+          circleClass += "bg-duo-bg border-duo-border text-gray-600 opacity-50";
+        } else if (isDone) {
+          circleClass += "bg-orange-500/20 border-orange-500 text-orange-400 shadow-[0_0_12px_rgba(249,115,22,0.4)]";
+        } else if (isToday && !isDone) {
+          circleClass += "bg-duo-card border-duo-border text-gray-300 ring-2 ring-orange-500/50 ring-offset-1 ring-offset-[#0b1317]";
+        } else {
+          circleClass += "bg-duo-card border-duo-border text-gray-500";
+        }
+        
+        calBox.innerHTML += `
+          <div class="flex flex-col items-center gap-1.5">
+            <span class="text-[9px] font-extrabold ${isToday ? 'text-white' : 'text-gray-400'}">${weekDays[i]}</span>
+            <div class="${circleClass}">
+              ${isDone ? '<i class="ph-fill ph-fire text-lg"></i>' : d.getDate()}
+            </div>
+          </div>
+        `;
       }
     }
 
