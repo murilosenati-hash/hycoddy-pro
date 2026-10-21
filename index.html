@@ -1152,38 +1152,725 @@
     }
 
     // Transforma os 100 CHAPTER_SPECS em aulas profundas de 5 etapas + 3 exercícios técnicos reais!
+    // ================= SEÇÃO 1 ARTESANAL (CAP. 1 A 10 — ZERO REPETIÇÃO, ESTILO CODDY REAL) =================
+    const HANDCRAFTED_SECTION_1 = {
+      1: {
+        chunks: [
+          {
+            title: "1. O que é uma Variável na Memória do Servidor?",
+            text: "Quando um jogador entra em Orbis, o servidor precisa guardar informações na memória RAM: quanta mana ele tem, qual é o nome do clã dele e se ele está em combate.\n\nNo Java 25, toda variável funciona como uma gaveta etiquetada e segue 3 regras:\n1. Tipagem Estática: você declara o TIPO antes do nome (`int`, `String`, `boolean`);\n2. Atribuição (`=`): o sinal de igual guarda o valor da direita dentro da gaveta da esquerda;\n3. Ponto e Vírgula (`;`): toda instrução em Java termina obrigatoriamente com `;`.",
+            code: `int mana = 100;\nString cla = "Kweebec";\nboolean emCombate = false;`
+          },
+          {
+            title: "2. Criando vs. Atualizando uma Variável",
+            text: "Um detalhe crucial em Java é a diferença entre **declarar** (criar pela 1ª vez) e **reasignar** (mudar o valor depois):\n\n• Na 1ª vez: você escreve o tipo na frente (`int mana = 100;`);\n• Nas próximas vezes: a gaveta já existe! Você usa **apenas o nome** (`mana = 65;`), sem repetir `int`.",
+            code: `int vida = 200; // 1. Criou a gaveta 'vida' do tipo int\nvida = 150;     // 2. Atualizou o valor para 150 (sem repetir 'int'!)\nvida = 80;      // 3. Atualizou novamente para 80`
+          },
+          {
+            title: "3. Outro Exemplo: Usando uma Variável dentro de Outra",
+            text: "Assim como no Coddy, você também pode copiar o valor de uma variável para outra ou exibi-la no console do servidor:",
+            code: `int danoEspada = 28;\nint danoFinal = danoEspada; // danoFinal copia o valor 28!\n\ndanoEspada = 40; \n// Atenção: mudar danoEspada depois NÃO muda danoFinal (que continua 28)!`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Veja os 3 erros que mais travam a compilação de quem está começando em Java:\n• Declarar duas vezes a mesma variável com o tipo na frente;\n• Esquecer as aspas duplas em textos (`String`);\n• Usar `string` com 's' minúsculo (em Java, `String` é uma classe e começa sempre com `S` maiúsculo!).",
+            code: `// ❌ ERRADO (Não compila):\nstring nome = Tomy;\nint nivel = 5;\nint nivel = 6; // Erro: variável 'nivel' já foi declarada!\n\n// ✅ CORRETO:\nString nome = "Tomy";\nint nivel = 5;\nnivel = 6;`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 1)",
+            text: "• `int`: números inteiros sem casas decimais (ex: `100`, `-15`, `0`);\n• `String`: textos entre aspas duplas (ex: `\"Out of the Breach\"`);\n• `boolean`: estado lógico (`true` ou `false`);\n• Só escrevemos o tipo na criação da variável!",
+            code: `// Pronto para os 3 desafios inéditos do Capítulo 1!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Sintaxe Java] Qual linha abaixo declara corretamente o nome de um gadget Goblin como texto em Java?",
+            code: `// Queremos guardar o texto "Hookshot" na variável gadget:`,
+            options: [
+              "string gadget = \"Hookshot\";",
+              "String gadget = Hookshot;",
+              "String gadget = \"Hookshot\";",
+              "int gadget = \"Hookshot\";"
+            ],
+            correct: 2,
+            explanation: "Em Java, o tipo String começa com 'S' maiúsculo e todo valor de texto deve ficar entre aspas duplas."
+          },
+          {
+            q: "2. [Teste de Mesa] Analise o código abaixo linha por linha. Qual será o valor guardado em 'scrapsCofre' no final?",
+            code: `int scrapsMochila = 25;\nint scrapsCofre = scrapsMochila;\nscrapsMochila = 90;`,
+            options: [
+              "25",
+              "90",
+              "115",
+              "0"
+            ],
+            correct: 0,
+            explanation: "Quando fizemos 'scrapsCofre = scrapsMochila', scrapsCofre copiou o valor que existia naquele momento (25). Mudar scrapsMochila para 90 na linha seguinte não altera scrapsCofre!"
+          },
+          {
+            q: "3. [Caça ao Bug] Por que o código abaixo falha ao compilar no JDK 25?",
+            code: `int manaAtual = 100;\nint manaAtual = 70;`,
+            options: [
+              "Porque 70 não é um número inteiro válido.",
+              "Porque faltou ponto e vírgula.",
+              "Porque a palavra 'int' foi repetida ao atualizar uma variável que já existia.",
+              "Porque variáveis int não podem mudar de valor."
+            ],
+            correct: 2,
+            explanation: "Para atualizar uma variável já criada, usamos apenas 'manaAtual = 70;', sem repetir o tipo 'int' na frente."
+          }
+        ]
+      },
+
+      2: {
+        chunks: [
+          {
+            title: "1. Números com Casas Decimais (float vs double)",
+            text: "No mundo 3D do Hytale, um jogador nunca está apenas no bloco 10 ou 11 — ele pode estar na coordenada `10.75`! Para números com fração decimal, o Java oferece dois tipos:\n\n1. `float` (32 bits): ocupa metade da memória, ideal para coordenadas 3D e velocidades no ECS. Exige a letra `f` no final do número (`12.5f`);\n2. `double` (64 bits): tem o dobro de precisão decimal e é o padrão do Java para cálculos científicos ou multiplicadores (`1.45`).",
+            code: `float posX = 128.5f;\nfloat velocidadeGlider = 9.25f;\ndouble multiplicadorDano = 1.35;`
+          },
+          {
+            title: "2. O Segredo da Divisão Inteira vs. Decimal",
+            text: "Preste muita atenção a esta regra do Java (que cai direto em desafios do Coddy!):\n\n• Se você dividir dois números `int` (`7 / 2`), o Java **joga fora a parte decimal** e devolve `3` (não `3.5`!);\n• Para o resultado ter casas decimais, pelo menos um dos números da divisão precisa ser decimal (`7.0 / 2` ou `7f / 2` -> resulta em `3.5`).",
+            code: `double metadeErrada = 7 / 2;   // 7 e 2 são int -> calcula 3 e guarda 3.0!\ndouble metadeCerta  = 7.0 / 2; // 7.0 é decimal -> calcula e guarda 3.5!`
+          },
+          {
+            title: "3. Outro Exemplo: Flags Booleanas de Estado",
+            text: "Enquanto `float` e `double` medem grandezas contínuas, o tipo `boolean` funciona como um interruptor (ligado/desligado) que ocupa apenas 1 bit lógico:",
+            code: `boolean planadorAberto = true;\nboolean tocandoNoChao = false;\nfloat gravidadeAtual = 0.08f;`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Dois erros clássicos com decimais e booleanos:\n• Esquecer o sufixo `f` ao atribuir um decimal a uma variável `float`;\n• Usar vírgula (`12,5`) em vez de ponto (`12.5`) ou colocar `\"true\"` entre aspas num `boolean`.",
+            code: `// ❌ ERRADO:\nfloat alturaY = 64.5;      // Erro: sem o 'f', o Java acha que 64.5 é double!\nboolean voando = "false";  // Erro: aspas transformam em String!\n\n// ✅ CORRETO:\nfloat alturaY = 64.5f;\nboolean voando = false;`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 2)",
+            text: "• Todo literal `float` termina com `f` (ex: `3.14f`);\n• `double` não precisa de letra no final (ex: `3.14159`);\n• Divisão entre dois `int` (`5 / 2`) trunca o decimal e dá `2`;\n• `boolean` aceita apenas `true` ou `false` puros.",
+            code: `// Vamos testar sua atenção nos 3 desafios do Capítulo 2!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Sintaxe float] Qual das linhas abaixo declara corretamente uma variável 'float' para o alcance do Hookshot?",
+            code: `// O alcance deve ser de 18.5 blocos usando o tipo float:`,
+            options: [
+              "float alcance = 18,5f;",
+              "float alcance = 18.5;",
+              "float alcance = 18.5f;",
+              "double alcance = 18.5f;"
+            ],
+            correct: 2,
+            explanation: "Em Java, usamos ponto decimal (.) e todo literal atribuído a uma variável float precisa terminar com a letra 'f' (18.5f)."
+          },
+          {
+            q: "2. [Teste de Mesa] Cuidado com a divisão inteira! Qual valor será impresso para a variável 'bonus' abaixo?",
+            code: `int pontos = 9;\nint divisor = 2;\ndouble bonus = pontos / divisor;`,
+            options: [
+              "4.5",
+              "4.0",
+              "5.0",
+              "4"
+            ],
+            correct: 1,
+            explanation: "Como 'pontos' (9) e 'divisor' (2) são ambos do tipo int, a divisão inteira 9 / 2 resulta em 4 (descarta o .5) e só depois vira double (4.0)!"
+          },
+          {
+            q: "3. [Caça ao Bug] Qual das declarações booleanas abaixo é a ÚNICA válida em Java?",
+            code: `// Queremos desativar o dano de queda das Rocket Boots:`,
+            options: [
+              "boolean danoQueda = 0;",
+              "boolean danoQueda = false;",
+              "boolean danoQueda = \"false\";",
+              "Boolean danoQueda = FALSE;"
+            ],
+            correct: 1,
+            explanation: "Em Java (diferente de C ou Python), boolean não aceita 0/1, não usa aspas e deve ser escrito tudo em minúsculas: true ou false."
+          }
+        ]
+      },
+
+      3: {
+        chunks: [
+          {
+            title: "1. Os 5 Operadores Aritméticos e a Precedência",
+            text: "Quando o servidor calcula o dano de uma habilidade na *Runebinder's Lattice*, ele segue exatamente a mesma ordem de prioridade da matemática:\n\n1. Parênteses `( )` são resolvidos primeiro;\n2. Multiplicação `*`, Divisão `/` e Resto `%` vêm em segundo lugar;\n3. Soma `+` e Subtração `-` ficam por último.",
+            code: `int semParenteses = 10 + 5 * 2;   // 5 * 2 = 10 -> + 10 = 20\nint comParenteses = (10 + 5) * 2; // (15) * 2 = 30`
+          },
+          {
+            title: "2. Como funciona o Operador de Módulo (`%` — Resto)",
+            text: "O operador `%` divide o número da esquerda pelo da direita e devolve **apenas o que sobrou (o resto)** da divisão inteira:\n\n• `10 % 3` ➔ 10 dividido por 3 dá 3 (pois 3x3=9) e **sobra `1`**;\n• `12 % 4` ➔ 12 dividido por 4 dá 3 exato e **sobra `0`**;\n• `7 % 2` ➔ todo número ímpar `% 2` sobra `1`; todo número par `% 2` sobra `0`!",
+            code: `int resto1 = 14 % 5; // 5 cabe 2 vezes no 14 (dá 10) -> sobra 4!\nint resto2 = 20 % 5; // Divisão exata -> sobra 0!`
+          },
+          {
+            title: "3. Outro Exemplo: Operadores Compostos (`+=`, `-=`, `*=`) ",
+            text: "Para somar, subtrair ou multiplicar um valor sobre a própria variável sem repetir o nome dela duas vezes, usamos os operadores de atribuição composta:",
+            code: `int scraps = 50;\nscraps += 25; // Equivale a: scraps = scraps + 25; (agora vale 75)\nscraps -= 15; // Equivale a: scraps = scraps - 15; (agora vale 60)\nscraps *= 2;  // Equivale a: scraps = scraps * 2;  (agora vale 120)`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Cuidado ao escrever operadores compostos: o sinal matemático vem **sempre antes** do `=` (`+=`, `-=`, `*=`). Se você inverter e escrever `=+` ou `=-`, o Java não soma nem subtrai — ele apenas substitui o valor!",
+            code: `int mana = 100;\n\n// ❌ ERRADO (Substitui mana por -30 em vez de subtrair 30!):\nmana =- 30; // Agora mana vale -30!\n\n// ✅ CORRETO (Subtrai 30 dos 100 existentes):\nmana -= 30; // Agora mana vale 70!`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 3)",
+            text: "• `*`, `/` e `%` têm prioridade sobre `+` e `-`;\n• Use `( )` sempre que quiser forçar uma soma antes da multiplicação;\n• `A % B` entrega o resto da divisão (se der `0`, `A` é múltiplo exato de `B`);\n• `x += 10` soma 10 diretamente em `x`.",
+            code: `// Hora de calcular nos 3 desafios do Capítulo 3!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Operador Módulo %] Qual será o valor guardado na variável 'sobraScraps' após rodar o código abaixo?",
+            code: `int totalScraps = 17;\nint custoPorItem = 5;\nint sobraScraps = totalScraps % custoPorItem;`,
+            options: [
+              "3",
+              "2",
+              "5",
+              "0"
+            ],
+            correct: 1,
+            explanation: "17 dividido por 5 dá 3 (pois 3 * 5 = 15) e restam 2. O operador % retorna exatamente esse resto (2)."
+          },
+          {
+            q: "2. [Precedência & Atribuição] Qual será o valor final de 'dano' após a execução das duas linhas abaixo?",
+            code: `int dano = 10 + 4 * 3;\ndano -= 2;`,
+            options: [
+              "40",
+              "20",
+              "22",
+              "24"
+            ],
+            correct: 1,
+            explanation: "Na 1ª linha, a multiplicação vem primeiro: 4 * 3 = 12, somando 10 dá 22. Na 2ª linha, 'dano -= 2' subtrai 2 de 22, resultando em 20!"
+          },
+          {
+            q: "3. [Lógica de Jogo] Queremos ativar um golpe crítico especial a cada 4º ataque (no ataque 4, 8, 12, 16...). Qual expressão verifica se 'ataqueAtual' é múltiplo de 4?",
+            code: `boolean ehQuartoAtaque = (________________);`,
+            options: [
+              "ataqueAtual / 4 == 0",
+              "ataqueAtual * 4 == 0",
+              "ataqueAtual % 4 == 0",
+              "ataqueAtual - 4 == 0"
+            ],
+            correct: 2,
+            explanation: "Quando o resto da divisão por 4 é zero (ataqueAtual % 4 == 0), sabemos que o número é múltiplo exato de 4!"
+          }
+        ]
+      },
+
+      4: {
+        chunks: [
+          {
+            title: "1. Incremento (++) e Decremento (--) no Detalhe",
+            text: "Adicionar `1` ou remover `1` de um contador é tão comum em jogos que o Java possui os operadores `++` e `--`. Mas a posição deles muda completamente o resultado quando estão junto de um `=`:\n\n• **Pré-incremento (`++x`)**: aumenta `x` primeiro e entrega o valor **NOVO**;\n• **Pós-incremento (`x++`)**: entrega o valor **ANTIGO** primeiro e só aumenta `x` depois!",
+            code: `int a = 10;\nint b = ++a; // Pré: 'a' sobe p/ 11 primeiro, e 'b' recebe 11\n\nint c = 10;\nint d = c++; // Pós: 'd' recebe 10 primeiro, e 'c' sobe p/ 11`
+          },
+          {
+            title: "2. Testando Pré-Decremento (--x) vs. Pós-Decremento (x--)",
+            text: "A mesma regra exata vale para o sinal de menos (`--`) ao descontar cargas de uma Runestone ou flechas da aljava:",
+            code: `int cargas = 3;\nint exibidoNoHud = cargas--; \n// 1. exibidoNoHud recebe o valor antigo (3)\n// 2. cargas cai para 2 logo em seguida!`
+          },
+          {
+            title: "3. Outro Exemplo: Combinando duas linhas em sequência",
+            text: "Veja o que acontece quando usamos pós-incremento na primeira linha e pré-incremento na linha seguinte sobre a mesma variável `combo`:",
+            code: `int combo = 1;\nint golpe1 = combo++; // golpe1 pega 1, e combo vira 2\nint golpe2 = ++combo; // combo sobe de 2 para 3 na hora, e golpe2 pega 3!\n// No final: golpe1 = 1, golpe2 = 3, combo = 3`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Um bug famoso em Java é escrever `x = x++;` achando que `x` vai aumentar:\n• Como o pós-incremento devolve o valor **antigo**, `x = x++` joga o valor antigo de volta por cima de `x`, anulando o aumento!\n• Quando estiver em uma linha sozinha, escreva apenas `x++;`!",
+            code: `int nivel = 5;\n\n// ❌ ERRADO (Armadilha clássica: nivel continua valendo 5!):\nnivel = nivel++;\n\n// ✅ CORRETO (Aumenta nivel para 6 de forma limpa):\nnivel++;`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 4)",
+            text: "• `y = ++x` ➔ `x` muda na hora, `y` e `x` terminam iguais;\n• `y = x++` ➔ `y` fica com o valor antigo, `x` termina 1 unidade maior;\n• Sozinho na linha (`x++;` ou `++x;`), ambos têm o mesmo efeito final.",
+            code: `// Vamos resolver os 3 quebra-cabeças do Capítulo 4!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Pós-Decremento] Qual será o valor de 'flechasUsadas' e de 'aljava' após rodar as duas linhas abaixo?",
+            code: `int aljava = 8;\nint flechasUsadas = aljava--;`,
+            options: [
+              "flechasUsadas = 7 e aljava = 7",
+              "flechasUsadas = 8 e aljava = 7",
+              "flechasUsadas = 8 e aljava = 8",
+              "flechasUsadas = 7 e aljava = 8"
+            ],
+            correct: 1,
+            explanation: "Como o -- vem DEPOIS (aljava--), flechasUsadas recebe o valor original (8) primeiro, e aljava diminui para 7 logo em seguida."
+          },
+          {
+            q: "2. [Desafio Duplo Coddy] Acompanhe o valor de 'x' com cuidado. Quanto valerá 'soma' no final?",
+            code: `int x = 3;\nint a = ++x;\nint b = x++;\nint soma = a + b;`,
+            options: [
+              "6",
+              "7",
+              "8",
+              "9"
+            ],
+            correct: 2,
+            explanation: "Passo 1: '++x' sobe x para 4 na hora, então a = 4. Passo 2: 'x++' entrega o valor atual de x (4) para b (então b = 4) e depois x vira 5. Logo, a + b = 4 + 4 = 8!"
+          },
+          {
+            q: "3. [Caça ao Bug] Por que o contador 'ondasConcluidas' abaixo nunca sai do número 1?",
+            code: `int ondasConcluidas = 1;\nondasConcluidas = ondasConcluidas++;`,
+            options: [
+              "Porque o operador ++ não funciona com o número 1.",
+              "Porque 'ondasConcluidas = ondasConcluidas++' reatribui o valor antigo (1) de volta na própria variável.",
+              "Porque o correto seria usar String.",
+              "Porque faltou parênteses ao redor do 1."
+            ],
+            correct: 1,
+            explanation: "Fazer 'x = x++' guarda de volta o valor antigo de x! Para incrementar sozinho na linha, escrevemos apenas 'ondasConcluidas++;'."
+          }
+        ]
+      },
+
+      5: {
+        chunks: [
+          {
+            title: "1. Os 6 Operadores Relacionais (Comparação)",
+            text: "Sempre que o servidor precisa checar um requisito (ex: *o jogador tem pelo menos 30 de mana para lançar Fireball?*), usamos um operador relacional. Toda comparação entre dois números devolve um `boolean` (`true` ou `false`):\n\n• `==` (Igual a) e `!=` (Diferente de)\n• `>` (Maior que) e `<` (Menor que)\n• `>=` (Maior ou igual a) e `<=` (Menor ou igual a)",
+            code: `int mana = 30;\nboolean podeFireball   = (mana >= 30); // true  (30 é igual a 30!)\nboolean AcimaDoLimite  = (mana > 30);  // false (30 não é maior que 30!)`
+          },
+          {
+            title: "2. A Diferença Crítica: `>` vs `>=` (Erro de 1 Ponto)",
+            text: "No desenvolvimento de jogos, confundir `>` com `>=` gera o famoso *Off-by-One Bug* (erro por 1 unidade):\n\n• No Hotfix 0.7.2, fabricar o par de Teleporters custa **25 Goblin Scraps**;\n• Se você programar `scraps > 25`, o jogador com exatos `25` Scraps será bloqueado injustamente!\n• Para incluir o valor limite, use sempre `>=` (maior ou igual) ou `<=` (menor ou igual).",
+            code: `int scrapsJogador = 25;\nboolean compraErrada = (scrapsJogador > 25);  // false (bloqueou com 25!)\nboolean compraCerta  = (scrapsJogador >= 25); // true  (liberou com 25!)`
+          },
+          {
+            title: "3. Outro Exemplo: Testando se está Morto ou Vivo (`!=` e `<=`)",
+            text: "Veja como verificamos se a durabilidade de um *Scrap Drill* ainda não zerou e se a vida do chefe chegou ao fim:",
+            code: `int durabilidadeDrill = 120;\nboolean drillFuncionando = (durabilidadeDrill != 0); // true\n\nint vidaBoss = 0;\nboolean bossDerrotado = (vidaBoss <= 0); // true`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Fique atento à escrita dos operadores duplos:\n• Nunca use um único `=` para comparar números (1 igual atribui valor; 2 iguais `==` comparam);\n• O sinal de igual nos operadores `>=`, `<=` e `!=` vem **sempre à direita** (escrever `=>` ou `=<` dá erro de sintaxe!).",
+            code: `// ❌ ERRADO:\nboolean nivelMaximo = (nivel = 50);  // Erro: 1 igual só atribui!\nboolean semMana     = (mana =< 0);   // Erro: não existe '=<'!\n\n// ✅ CORRETO:\nboolean nivelMaximo = (nivel == 50);\nboolean semMana     = (mana <= 0);`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 5)",
+            text: "• `==` testa igualdade; `!=` testa diferença;\n• `30 > 30` é `false`, mas `30 >= 30` é `true`;\n• O símbolo `=` nos operadores relacionais fica sempre do lado direito (`>=`, `<=`, `!=`).",
+            code: `// Teste sua precisão nos 3 desafios do Capítulo 5!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Fronteira >= vs >] A runa 'Chain Hook' no Patch 0.7.2 custa exatos 50 de Mana. Se o jogador tem mana = 50, qual é o resultado de (mana > 50) e (mana >= 50)?",
+            code: `int mana = 50;\nboolean teste1 = (mana > 50);\nboolean teste2 = (mana >= 50);`,
+            options: [
+              "teste1 = true, teste2 = true",
+              "teste1 = false, teste2 = true",
+              "teste1 = true, teste2 = false",
+              "teste1 = false, teste2 = false"
+            ],
+            correct: 1,
+            explanation: "50 não é estritamente maior que 50 (teste1 = false), mas 50 é maior ou igual a 50 (teste2 = true)."
+          },
+          {
+            q: "2. [Teste de Mesa] Qual será o valor booleano guardado na variável 'bonusAtivo'?",
+            code: `int faseDaBrecha = 2;\nint faseFinal = 3;\nboolean bonusAtivo = (faseDaBrecha != faseFinal);`,
+            options: [
+              "true",
+              "false",
+              "2",
+              "Erro de compilação"
+            ],
+            correct: 0,
+            explanation: "O operador != pergunta se os valores são DIFERENTES. Como 2 é diferente de 3, o resultado é true!"
+          },
+          {
+            q: "3. [Caça ao Bug] Qual das comparações abaixo possui um erro de sintaxe e NÃO compila em Java?",
+            code: `// Testando se a temperatura da furadeira passou do limite:`,
+            options: [
+              "boolean alerta = (temperatura >= 100);",
+              "boolean alerta = (temperatura == 100);",
+              "boolean alerta = (temperatura => 100);",
+              "boolean alerta = (temperatura != 100);"
+            ],
+            correct: 2,
+            explanation: "Em Java, 'maior ou igual' escreve-se '>=' (o sinal de igual vem sempre depois). '=>' não é um operador relacional válido."
+          }
+        ]
+      },
+
+      6: {
+        chunks: [
+          {
+            title: "1. Tabela Verdade na Prática: `&&` (E), `||` (OU) e `!` (NÃO)",
+            text: "Os operadores lógicos conectam duas ou mais condições booleanas para formar regras de jogo completas:\n\n1. `&&` (AND / E): Exigente! Só devolve `true` se **ambos os lados** forem `true`;\n2. `||` (OR / OU): Flexível! Devolve `true` se **pelo menos um lado** for `true`;\n3. `!` (NOT / NÃO): Inversor! Transforma `true` em `false` e `false` em `true`.",
+            code: `boolean temChave = true;\nboolean portaDestrancada = false;\n\nboolean passaComE  = temChave && portaDestrancada; // false (faltou um!)\nboolean passaComOU = temChave || portaDestrancada; // true  (basta um!)`
+          },
+          {
+            title: "2. Como funciona o Inversor `!` e a Avaliação em Curto-Circuito",
+            text: "O operador `!` na frente de uma variável booleana lê-se como **'NÃO está...'**:\n\n• Se `congelado` é `false`, então `!congelado` (*não está congelado*) é `true`!\n• **Curto-Circuito:** No `A && B`, se `A` já for `false`, o Java nem perde tempo testando `B`!",
+            code: `boolean congelado = false;\nboolean estunado = false;\n\n// Só pode usar o Hookshot se NÃO estiver congelado E NÃO estiver estunado:\nboolean podeUsarHookshot = !congelado && !estunado; // true && true = true!`
+          },
+          {
+            title: "3. Outro Exemplo: Combinando Comparações + Lógica (Hotfix 0.7.2)",
+            text: "No Hotfix 0.7.2, para fabricar a *Backpack Upgrade II*, o jogador precisa ter o Compressor reparado **E** pelo menos 150 Goblin Scraps, **OU** estar no Modo Criativo:",
+            code: `int scraps = 120;\nboolean compressorOk = true;\nboolean modoCriativo = true;\n\nboolean podeFabricar = (compressorOk && scraps >= 150) || modoCriativo;\n// (true && false) -> false || true -> Resultado final: true!`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Em Java, você não pode comparar uma variável contra dois valores sem repetir o nome da variável dos dois lados do `&&` ou `||`!",
+            code: `int zona = 2;\n\n// ❌ ERRADO (Não compila em Java!):\n// boolean zonaValida = (zona == 1 || 2);\n\n// ✅ CORRETO (Repita a comparação completa dos dois lados):\nboolean zonaValida = (zona == 1 || zona == 2);`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 6)",
+            text: "• `true && false` ➔ `false` (no `&&`, um único `false` derruba tudo);\n• `true || false` ➔ `true` (no `||`, um único `true` salva tudo);\n• `!false` ➔ `true`;\n• `&&` tem prioridade sobre `||` (use parênteses para deixar a regra clara!).",
+            code: `// Vamos dominar a lógica nos 3 desafios do Capítulo 6!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Teste de Mesa Lógico] Qual será o valor final da variável 'liberaAtaque' no código abaixo?",
+            code: `int mana = 25;\nboolean temPergaminho = true;\nboolean silenciado = false;\n\nboolean liberaAtaque = (mana >= 40 || temPergaminho) && !silenciado;`,
+            options: [
+              "true",
+              "false",
+              "25",
+              "Erro de sintaxe"
+            ],
+            correct: 0,
+            explanation: "Dentro dos parênteses: (25 >= 40 é false, mas temPergaminho é true -> false || true dá true). Fora: !silenciado é !false (que vira true). Por fim, true && true resulta em true!"
+          },
+          {
+            q: "2. [Regra do Update 7] No Update 7, o minério Adamantite só pode ser minerado se a picareta for \"Thorium\" OU \"Cobalt\". Qual linha escreve essa condição corretamente em Java?",
+            code: `String picareta = "Cobalt";`,
+            options: [
+              "boolean pode = picareta.equals(\"Thorium\" || \"Cobalt\");",
+              "boolean pode = picareta.equals(\"Thorium\") && picareta.equals(\"Cobalt\");",
+              "boolean pode = picareta.equals(\"Thorium\") || picareta.equals(\"Cobalt\");",
+              "boolean pode = !picareta.equals(\"Cobalt\");"
+            ],
+            correct: 2,
+            explanation: "Como uma mesma picareta não pode ser Thorium e Cobalt ao mesmo tempo, usamos o operador OU (||) com duas chamadas completas a .equals()."
+          },
+          {
+            q: "3. [Operador NOT !] Se 'boolean escudoAtivo = false;', qual expressão retorna 'true'?",
+            code: `boolean escudoAtivo = false;`,
+            options: [
+              "escudoAtivo && true",
+              "!escudoAtivo",
+              "escudoAtivo || false",
+              "!!escudoAtivo"
+            ],
+            correct: 1,
+            explanation: "O operador ! inverte o valor booleano: como escudoAtivo é false, !escudoAtivo avalia para true!"
+          }
+        ]
+      },
+
+      7: {
+        chunks: [
+          {
+            title: "1. Como o Java percorre o `if`, `else if` e `else`",
+            text: "Quando encadeamos várias condições com `if` e `else if`, o servidor testa de cima para baixo como uma cascata:\n\n1. Assim que encontra a **PRIMEIRA** condição verdadeira, ele executa aquele bloco `{ }` e **ignora todos os `else if` e `else` abaixo**!\n2. Por isso, sempre colocamos a condição mais exigente (o maior número) no topo e vamos descendo em ordem decrescente.",
+            code: `int pontosBrecha = 85;\nString medalha;\n\nif (pontosBrecha >= 100) {\n    medalha = "Ouro";\n} else if (pontosBrecha >= 70) {\n    medalha = "Prata"; // Entra aqui (85 >= 70) e pula o resto!\n} else {\n    medalha = "Bronze";\n}`
+          },
+          {
+            title: "2. `if` Independentes vs. `else if` Conectados",
+            text: "Olhe a diferença enorme entre usar dois `if` separados e usar `else if`:\n\n• Com `else if`: apenas **um** caminho roda;\n• Com dois `if` separados: o segundo `if` será testado **mesmo que o primeiro tenha dado verdadeiro**!",
+            code: `int mana = 60;\n// Se usarmos dois 'if' separados, AMBOS serão executados para mana = 60:\nif (mana >= 50) { darBonusAlto(); }\nif (mana >= 30) { darBonusMedio(); } // Roda também!`
+          },
+          {
+            title: "3. Outro Exemplo: O Operador Ternário (`condicao ? valorSeTrue : valorSeFalse`)",
+            text: "Para fazer um `if / else` rápido de 1 única linha na hora de atribuir um valor, o Java oferece o **Operador Ternário (`? :`)**:",
+            code: `boolean temRunaThrift = true;\n// Se tiver a runa Thrift, custa 22 de mana; senão, custa 30:\nint custoFireball = temRunaThrift ? 22 : 30; // Resultado: 22`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Dois bugs perigosos em estruturas `if`:\n• Colocar a condição mais baixa (`>= 20`) antes da mais alta (`>= 100`) num `else if` (quem tiver 150 vai cair no `>= 20` primeiro!);\n• Colocar um ponto e vírgula `;` logo depois do `if (condicao);` antes da chave `{`!",
+            code: `// ❌ ERRADO (Ordem invertida: com 120 pontos cai no '>= 50' e nunca chega no 100!):\nif (pts >= 50) { rank = "Prata"; }\nelse if (pts >= 100) { rank = "Ouro"; }\n\n// ✅ CORRETO (Sempre do maior requisito para o menor):\nif (pts >= 100) { rank = "Ouro"; }\nelse if (pts >= 50) { rank = "Prata"; }`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 7)",
+            text: "• Num encadeamento `if / else if / else`, apenas o **1º bloco verdadeiro** é executado;\n• Ordene faixas numéricas do caso mais restrito para o mais amplo;\n• Ternário: `condicao ? seVerdadeiro : seFalso`.",
+            code: `// Vamos testar sua leitura de fluxo nos 3 desafios do Capítulo 7!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Fluxo de Execução] Qual será o valor final da variável 'tierBrecha' após rodar o código abaixo?",
+            code: `int nivel = 25;\nString tierBrecha = "Nenhum";\n\nif (nivel >= 30) {\n    tierBrecha = "Tier 3";\n} else if (nivel >= 20) {\n    tierBrecha = "Tier 2";\n} else if (nivel >= 10) {\n    tierBrecha = "Tier 1";\n}`,
+            options: [
+              "\"Tier 3\"",
+              "\"Tier 2\"",
+              "\"Tier 1\"",
+              "\"Nenhum\""
+            ],
+            correct: 1,
+            explanation: "25 >= 30 é falso. Passa para o primeiro else if: 25 >= 20 é verdadeiro! Ele define tierBrecha = \"Tier 2\" e ignora o restante da estrutura."
+          },
+          {
+            q: "2. [Atenção: Dois 'if' separados!] Observe que no código abaixo NÃO foi usado 'else if'. Quanto valerá 'desconto' no final?",
+            code: `int compras = 10;\nint desconto = 0;\n\nif (compras >= 5) {\n    desconto += 10;\n}\nif (compras >= 8) {\n    desconto += 15;\n}`,
+            options: [
+              "10",
+              "15",
+              "25",
+              "0"
+            ],
+            correct: 2,
+            explanation: "Como são dois blocos 'if' independentes (sem 'else'), ambos são testados! 10 >= 5 é true (soma 10) e 10 >= 8 também é true (soma mais 15), totalizando 25!"
+          },
+          {
+            q: "3. [Operador Ternário] Qual será o valor guardado em 'teleportersGerados' na linha abaixo?",
+            code: `int scrapsGastos = 25;\nint teleportersGerados = (scrapsGastos >= 25) ? 2 : 0;`,
+            options: [
+              "25",
+              "2",
+              "0",
+              "true"
+            ],
+            correct: 1,
+            explanation: "No operador ternário (condicao ? valorSeTrue : valorSeFalse), como 25 >= 25 é verdadeiro, ele retorna o valor após a interrogação: 2."
+          }
+        ]
+      },
+
+      8: {
+        chunks: [
+          {
+            title: "1. Por que o Switch Moderno do Java 25 (`->`) é tão melhor?",
+            text: "No Java antigo, esquecer a palavra `break;` dentro de um `switch` fazia o código 'cair' (fall-through) e executar os casos de baixo por acidente!\n\nNo **Java 25 JDK** (usado pelo Hytale), temos o **Switch Expression com seta (`->`)**:\n1. Executa **apenas** o ramo correspondente, sem precisar de `break`;\n2. Permite listar múltiplos casos na mesma linha separados por vírgula (`case \"A\", \"B\" ->`);\n3. Pode devolver o valor calculado direto para uma variável!",
+            code: `String runa = "WindStrike";\n\nint mana = switch (runa) {\n    case "Fireball", "WindStrike" -> 30;\n    case "ChargedShot" -> 35;\n    case "GroundSlam", "ImbuePoison" -> 40;\n    case "ChainHook" -> 50;\n    default -> 20;\n};`
+          },
+          {
+            title: "2. Usando Blocos `{ }` e a palavra-chave `yield` no Switch",
+            text: "E se um dos casos do seu Switch moderno precisar executar mais de uma linha (ex: gravar um log no console e depois devolver o valor)?\n\n• Basta abrir chaves `{ }` após a seta `->` e usar a palavra-chave **`yield`** para devolver o valor final daquele bloco!",
+            code: `int dano = switch (arma) {\n    case "Slingshot" -> 18;\n    case "Blowgun" -> {\n        aplicarVenenoNoAlvo();\n        yield 24; // 'yield' entrega o valor 24 para a variável 'dano'!\n    }\n    default -> 10;\n};`
+          },
+          {
+            title: "3. Outro Exemplo: Switch executando ações diretas (sem retorno)",
+            text: "Você também pode usar o Switch com `->` apenas para disparar métodos de subcomandos, sem atribuir a nenhuma variável:",
+            code: `switch (subcomando) {\n    case "abrir", "open" -> abrirMenuLattice(player);\n    case "reset"         -> limparRunas(player);\n    default              -> enviarAjuda(player);\n}`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Quando o Switch Expression atribui resultado a uma variável (`int x = switch(...) { ... };`):\n• O ramo `default ->` é **obrigatório** (para garantir que a variável nunca fique sem valor);\n• Não esqueça o ponto e vírgula `;` depois da chave de fechamento `};`!",
+            code: `// ❌ ERRADO (Faltou o 'default' e o ';' no final da atribuição):\nint custo = switch (item) {\n    case "Teleporter" -> 25;\n}\n\n// ✅ CORRETO:\nint custo = switch (item) {\n    case "Teleporter" -> 25;\n    default -> 50;\n};`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 8)",
+            text: "• Sintaxe de seta `case X -> valor;` nunca vaza para o caso de baixo;\n• Agrupe casos iguais com vírgula: `case 1, 2, 3 ->`;\n• Dentro de blocos `{ }` de um Switch Expression, usamos `yield valor;`;\n• Sempre inclua `default ->` ao guardar o retorno numa variável.",
+            code: `// Hora de dominar o Switch do Java 25 nos 3 desafios do Capítulo 8!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Agrupamento no Switch] Qual será o valor guardado em 'cooldownSegundos' após executar o Switch abaixo?",
+            code: `String runa = "ImbuePoison";\nint cooldownSegundos = switch (runa) {\n    case "Fireball", "WindStrike" -> 2;\n    case "ImbuePoison", "Enrage" -> 4;\n    case "GroundSlam" -> 5;\n    default -> 6;\n};`,
+            options: [
+              "2",
+              "4",
+              "5",
+              "6"
+            ],
+            correct: 1,
+            explanation: "A String \"ImbuePoison\" bate com o segundo case ('case \"ImbuePoison\", \"Enrage\" -> 4;'), retornando imediatamente o valor 4."
+          },
+          {
+            q: "2. [Palavra-chave yield] Quando abrimos chaves { } dentro de um case do Switch Expression para rodar várias linhas, qual palavra usamos para devolver o valor?",
+            code: `int bonus = switch (tier) {\n    case 2 -> {\n        anunciarBrecha();\n        _____ 50;\n    }\n    default -> 10;\n};`,
+            options: [
+              "break",
+              "yield",
+              "continue",
+              "default"
+            ],
+            correct: 1,
+            explanation: "No Java 25, a palavra-chave 'yield' é usada para produzir o valor de retorno de um bloco { } dentro de uma Switch Expression."
+          },
+          {
+            q: "3. [Caça ao Bug] Por que o Switch Expression abaixo falha ao compilar ao tentar guardar o resultado em 'mana'?",
+            code: `String mod = "Thrift";\nint mana = switch (mod) {\n    case "Splinter" -> 37;\n    case "Colossal" -> 45;\n};`,
+            options: [
+              "Porque não se pode usar String num switch.",
+              "Porque faltou o ramo 'default ->' para cobrir qualquer outro texto possível.",
+              "Porque faltou escrever 'break;' depois do 37.",
+              "Porque a seta correta é '=>'."
+            ],
+            correct: 1,
+            explanation: "Toda Switch Expression que atribui valor a uma variável precisa ser exaustiva (ter um ramo 'default ->' quando avalia Strings ou ints)."
+          }
+        ]
+      },
+
+      9: {
+        chunks: [
+          {
+            title: "1. Por que NUNCA comparamos Strings com `==` em Java?",
+            text: "Tipos primitivos (`int`, `boolean`) guardam o valor diretamente. Já uma `String` é um **Objeto**: a variável guarda apenas o endereço de memória onde o texto está!\n\n• Se você usar `texto1 == texto2`, o Java compara se são o mesmo endereço de memória (o que frequentemente dá `false` mesmo com textos idênticos!);\n• Para comparar as letras do texto de verdade, usamos:\n  1. `.equals(\"...\")`: compara diferenciando maiúsculas de minúsculas;\n  2. `.equalsIgnoreCase(\"...\")`: compara ignorando maiúsculas/minúsculas!",
+            code: `String digitado = "/BREACH";\nboolean exato    = digitado.equals("/breach");           // false\nboolean ignorando = digitado.equalsIgnoreCase("/breach"); // true!`
+          },
+          {
+            title: "2. Ferramentas Essenciais de String para Plugins",
+            text: "A classe `String` vem com métodos prontos que usamos todos os dias em filtros de chat e comandos:\n\n• `.length()`: devolve quantos caracteres o texto tem;\n• `.toLowerCase()` e `.toUpperCase()`: converte para minúsculas ou maiúsculas;\n• `.contains(\"trecho\")`: devolve `true` se a palavra aparece em qualquer parte da frase;\n• `.startsWith(\"/\")`: devolve `true` se o texto começa com aquele prefixo;\n• `.trim()`: remove espaços em branco extras no começo e no fim!",
+            code: `String chat = "   Esse servidor é CHATO demais!   ";\nString limpo = chat.trim().toLowerCase();\n// limpo agora é: "esse servidor é chato demais!"\nboolean bloqueado = limpo.contains("chato"); // true!`
+          },
+          {
+            title: "3. Outro Exemplo: Cuidado ao Somar (Concatenar) Texto + Números!",
+            text: "Quando usamos o sinal `+` com uma `String`, o Java junta (concatena) tudo da esquerda para a direita. Veja a diferença que os parênteses fazem:",
+            code: `String msgErrada = "Mana: " + 20 + 10;   // Junta "Mana: 20" com 10 -> "Mana: 2010"!\nString msgCerta  = "Mana: " + (20 + 10); // Soma (30) primeiro -> "Mana: 30"!`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Lembre-se de que Strings em Java são **imutáveis**: chamar `msg.toLowerCase();` sozinho na linha **não altera** a variável `msg` original — você precisa guardar o retorno de volta na variável!",
+            code: `String msg = "SPAM";\n\n// ❌ ERRADO (Não guardou o resultado: 'msg' continua sendo "SPAM" maiúsculo!):\nmsg.toLowerCase();\n\n// ✅ CORRETO (Guarda a nova String minúscula de volta em 'msg'):\nmsg = msg.toLowerCase(); // Agora sim vale "spam"!`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 9)",
+            text: "• Compare Strings sempre com `.equals()` ou `.equalsIgnoreCase()`;\n• Use `msg = msg.toLowerCase();` antes de `.contains()` em filtros;\n• Em `\"Total: \" + (a + b)`, coloque a soma matemática entre parênteses para não virar texto concatenado!",
+            code: `// Vamos colocar essas Strings à prova nos 3 desafios do Capítulo 9!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Concatenação vs Soma] O que será guardado exatamente na variável 'log' após executar a linha abaixo?",
+            code: `int a = 15;\nint b = 10;\nString log = "Scraps: " + a + b;`,
+            options: [
+              "\"Scraps: 25\"",
+              "\"Scraps: 1510\"",
+              "\"Scraps: a + b\"",
+              "Erro de compilação"
+            ],
+            correct: 1,
+            explanation: "Sem parênteses em (a + b), o Java avalia da esquerda para a direita: junta \"Scraps: \" com 15 (\"Scraps: 15\") e depois concatena com 10, gerando \"Scraps: 1510\"!"
+          },
+          {
+            q: "2. [Imutabilidade da String] Analise o código abaixo com atenção. Qual será o valor de 'temProibida'?",
+            code: `String frase = "MUITO SPAM AQUI";\nfrase.toLowerCase();\nboolean temProibida = frase.contains("spam");`,
+            options: [
+              "true",
+              "false",
+              "\"spam\"",
+              "Erro de execução"
+            ],
+            correct: 1,
+            explanation: "Pegadinha clássica! Como Strings são imutáveis, chamar 'frase.toLowerCase();' sem fazer 'frase = frase.toLowerCase();' não muda a variável 'frase', que continua toda em MAIÚSCULAS. Por isso, frase.contains(\"spam\") dá false!"
+          },
+          {
+            q: "3. [Métodos de String] Qual método verifica se dois nomes de comandos são iguais ignorando se o jogador digitou em maiúsculas ou minúsculas (ex: \"/Breach\" e \"/breach\")?",
+            code: `if (cmd.__________________("/breach")) {\n    abrirPortal();\n}`,
+            options: [
+              "equals",
+              "containsIgnoreCase",
+              "equalsIgnoreCase",
+              "=="
+            ],
+            correct: 2,
+            explanation: "O método .equalsIgnoreCase() compara duas Strings ignorando diferenças entre letras maiúsculas e minúsculas."
+          }
+        ]
+      },
+
+      10: {
+        chunks: [
+          {
+            title: "1. Constantes `static final` e Inferência `var` no Java 25",
+            text: "Para fechar a Seção 1 com chave de ouro, vamos dominar dois recursos que deixam o código do seu plugin digno de um engenheiro sênior:\n\n1. **Constantes (`public static final`)**: travam valores de configuração que nunca devem ser alterados por acidente durante a partida (escritas em `UPPER_SNAKE_CASE`);\n2. **Inferência de Tipo (`var`)**: dentro de métodos no Java 25, você pode escrever `var` e o compilador descobre o tipo sozinho pelo valor atribuído!",
+            code: `public class ConfigBrecha {\n    public static final int CUSTO_TELEPORTER = 25;\n    public static final int MAX_CHUNKS_VISAO = 32;\n}`
+          },
+          {
+            title: "2. Conversão de Tipos (Type Casting) e `Integer.parseInt`",
+            text: "E quando você precisa converter um decimal `double` para `int` (ex: mostrar a vida sem casas decimais no HUD) ou transformar um texto `\"150\"` digitado no comando em número?\n\n• **Casting explícito `(int)`**: corta a parte decimal (`(int) 9.8` vira `9`);\n• **`Integer.parseInt(\"150\")`**: converte uma `String` numérica para `int`!",
+            code: `double danoCalculado = 37.85;\nint danoExibido = (int) danoCalculado; // Corta o .85 -> vira 37!\n\nString argumentoCmd = "150";\nint quantidadeScraps = Integer.parseInt(argumentoCmd); // Vira o número 150!`
+          },
+          {
+            title: "3. Outro Exemplo: Usando `var` em variáveis locais (Java 25)",
+            text: "Veja como o `var` economiza digitação dentro de métodos mantendo a tipagem 100% segura:",
+            code: `var mensagem = "Goblin Breach Tier 2"; // O Java sabe que é String!\nvar manaInicial = 100;                 // O Java sabe que é int!\n// mensagem = 50; -> Daria erro! Pois 'mensagem' nasceu como String.`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Três regras importantes:\n• Uma variável marcada como `final` não pode sofrer `++`, `+=` nem receber novo valor;\n• `var` só funciona **dentro de métodos** e quando já recebe um valor inicial na mesma linha!",
+            code: `final int LIMITE_VIDAS = 5;\n\n// ❌ ERRADO (Não é permitido alterar uma constante 'final'):\n// LIMITE_VIDAS = 10;\n// LIMITE_VIDAS++;\n\n// ✅ CORRETO (Apenas leitura):\nint vidasAtuais = LIMITE_VIDAS;`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 10 — Fechamento da Seção 1!)",
+            text: "• `final` bloqueia qualquer alteração posterior na variável;\n• `(int) 14.9` trunca a casa decimal e resulta em `14`;\n• `Integer.parseInt(\"42\")` converte texto em número inteiro;\n• `var` deduz o tipo automaticamente a partir do valor inicial.",
+            code: `// Conclua os 3 desafios finais da Seção 1 para se formar em Fundamentos Java 25!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Type Casting e Parse] Qual será o valor final da variável 'total' após executar o código abaixo?",
+            code: `double distancia = 12.9;\nint blocosInteiros = (int) distancia;\nint extra = Integer.parseInt("8");\nint total = blocosInteiros + extra;`,
+            options: [
+              "21",
+              "20",
+              "128",
+              "20.9"
+            ],
+            correct: 1,
+            explanation: "O casting '(int) 12.9' corta a parte decimal (não arredonda!), resultando em 12. Já Integer.parseInt(\"8\") vira o número 8. Somando 12 + 8, temos 20!"
+          },
+          {
+            q: "2. [Inferência com var] No Java 25, o que acontece se tentarmos rodar as duas linhas abaixo dentro de um método?",
+            code: `var runaAtiva = "Fireball";\nrunaAtiva = 30;`,
+            options: [
+              "runaAtiva passa a valer o número 30 normalmente.",
+              "Ocorre erro de compilação, pois o 'var' fixou o tipo de runaAtiva como String na 1ª linha.",
+              "runaAtiva vira \"Fireball30\".",
+              "O servidor reinicia."
+            ],
+            correct: 1,
+            explanation: "'var' em Java não é tipagem dinâmica como no JavaScript: ele infere que runaAtiva é String na primeira linha e proíbe guardar um int (30) nela depois!"
+          },
+          {
+            q: "3. [Constantes Imutáveis] Qual linha abaixo causa um ERRO de compilação ao lidar com a constante MAX_PLAYERS?",
+            code: `final int MAX_PLAYERS = 64;\nint onlineAgora = 30;`,
+            options: [
+              "int vagas = MAX_PLAYERS - onlineAgora;",
+              "boolean lotado = (onlineAgora >= MAX_PLAYERS);",
+              "MAX_PLAYERS += 10;",
+              "System.out.println(MAX_PLAYERS);"
+            ],
+            correct: 2,
+            explanation: "Como MAX_PLAYERS foi declarada com a palavra-chave 'final', tentar alterá-la com '+= 10' gera erro de compilação imediato."
+          }
+        ]
+      }
+    };
+
+    // Transforma os 100 CHAPTER_SPECS em aulas (usando a Seção 1 100% artesanal e mantendo as demais funcionais!)
     const CURRICULUM_100 = CHAPTER_SPECS.map((raw, idx) => {
       const id = idx + 1;
       const [sec, title, subtitle, c1, code, c2, q1, opts1, ans1, exp1] = raw;
+
+      // Se o capítulo estiver no catálogo artesanal (Cap. 1 a 10), usa o conteúdo exclusivo feito à mão!
+      if (HANDCRAFTED_SECTION_1[id]) {
+        return {
+          id,
+          section: sec,
+          title: `Cap. ${id}: ${title}`,
+          shortTitle: title,
+          subtitle,
+          xpReward: 20 + (sec * 2),
+          gemReward: 8 + sec,
+          chunks: HANDCRAFTED_SECTION_1[id].chunks,
+          exercises: HANDCRAFTED_SECTION_1[id].exercises
+        };
+      }
+
       const extra = buildSecondExampleAndPitfall(id, sec, title, code, subtitle);
       const lineByLine = dissectCodeLineByLine(code, sec, title);
-
-      // Cria uma questão prática de completar lacuna baseada no código real do capítulo
       const codeLines = code.split("\n").filter(l => l.trim() && !l.trim().startsWith("//"));
       const targetLine = codeLines[0] || code;
       const correctOptText = opts1[ans1];
 
-      // Busca distratores reais de capítulos vizinhos da mesma seção (zero opções bobas!)
       const neighborChapters = CHAPTER_SPECS.filter((r, i) => r[0] === sec && i !== idx);
       const realDistractors = neighborChapters.slice(0, 3).map(n => n[9]);
       while (realDistractors.length < 3) {
         realDistractors.push("Deve ser executado exclusivamente fora da pasta src/main sem compilação Gradle.");
       }
 
-      const ex3Options = [
-        exp1,
-        realDistractors[0],
-        realDistractors[1],
-        realDistractors[2]
-      ];
-
-      // Embaralha de forma determinística a posição da resposta correta no Exercício 3
+      const ex3Options = [exp1, realDistractors[0], realDistractors[1], realDistractors[2]];
       const shift = id % 4;
       const rotatedOpts = [];
-      for (let i = 0; i < 4; i++) {
-        rotatedOpts[(i + shift) % 4] = ex3Options[i];
-      }
-      const ex3CorrectIdx = shift;
+      for (let i = 0; i < 4; i++) rotatedOpts[(i + shift) % 4] = ex3Options[i];
 
       return {
         id,
@@ -1194,54 +1881,16 @@
         xpReward: 20 + (sec * 2),
         gemReward: 8 + sec,
         chunks: [
-          {
-            title: `1. Conceito & Fundamento — ${title}`,
-            text: `${c1}\n\n💡 Contexto no Hytale: ${subtitle}.`,
-            code: null
-          },
-          {
-            title: `2. Estrutura & Sintaxe na Prática (JDK 25 / v0.7.2)`,
-            text: `Observe como implementamos **${title}** no código abaixo e veja a explicação detalhada de cada parte:\n\n${lineByLine}`,
-            code: code
-          },
-          {
-            title: extra.exTitle,
-            text: extra.exText,
-            code: extra.exCode
-          },
-          {
-            title: extra.pitTitle,
-            text: `${c2}\n\n${extra.pitText}`,
-            code: extra.pitCode
-          },
-          {
-            title: `5. Resumo de Bolso (Cheat Sheet — Cap. ${id}/100)`,
-            text: `Antes de ir para o Questionário Prático, fixe os 3 pontos-chave desta aula:\n\n• Tema: ${title} (${subtitle})\n• Regra Chave: ${exp1}\n• Dica de Ouro: ${c2}`,
-            code: `// ✔ Etapa de Conhecimento concluída!\n// Clique em FINALIZAR TEORIA para ganhar +1 ❤️ e testar no Quiz!`
-          }
+          { title: `1. Conceito & Fundamento — ${title}`, text: `${c1}\n\n💡 Contexto no Hytale: ${subtitle}.`, code: null },
+          { title: `2. Estrutura & Sintaxe na Prática (JDK 25 / v0.7.2)`, text: `Observe como implementamos **${title}** no código abaixo:\n\n${lineByLine}`, code: code },
+          { title: extra.exTitle, text: extra.exText, code: extra.exCode },
+          { title: extra.pitTitle, text: `${c2}\n\n${extra.pitText}`, code: extra.pitCode },
+          { title: `5. Resumo de Bolso (Cheat Sheet — Cap. ${id}/100)`, text: `• Tema: ${title}\n• Regra Chave: ${exp1}\n• Dica de Ouro: ${c2}`, code: `// ✔ Etapa de Conhecimento concluída!` }
         ],
         exercises: [
-          {
-            q: `1. [Conceito & Sintaxe] ${q1}`,
-            code: code,
-            options: opts1,
-            correct: ans1,
-            explanation: exp1
-          },
-          {
-            q: `2. [Análise de Código] Analisando a implementação prática de "${title}", qual elemento abaixo responde corretamente à regra: "${q1}"?`,
-            code: `// Cenário prático — ${title} (${subtitle}):\n${targetLine}`,
-            options: opts1.map((o, i) => `Alternativa ${String.fromCharCode(65 + i)}: ${o}`),
-            correct: ans1,
-            explanation: `Perfeito! O elemento correto é "${correctOptText}". ${exp1}`
-          },
-          {
-            q: `3. [Engenharia Hytale] Qual das diretrizes técnicas abaixo descreve corretamente o funcionamento de "${title}" no servidor?`,
-            code: extra.pitCode,
-            options: rotatedOpts,
-            correct: ex3CorrectIdx,
-            explanation: `Exato! ${exp1} ${c2}`
-          }
+          { q: `1. [Conceito & Sintaxe] ${q1}`, code: code, options: opts1, correct: ans1, explanation: exp1 },
+          { q: `2. [Análise de Código] Analisando a implementação de "${title}", qual elemento responde à regra: "${q1}"?`, code: `// ${title}:\n${targetLine}`, options: opts1.map((o, i) => `Alternativa ${String.fromCharCode(65 + i)}: ${o}`), correct: ans1, explanation: `O elemento correto é "${correctOptText}". ${exp1}` },
+          { q: `3. [Engenharia Hytale] Qual diretriz descreve corretamente o funcionamento de "${title}"?`, code: extra.pitCode, options: rotatedOpts, correct: shift, explanation: `Exato! ${exp1}` }
         ]
       };
     });
@@ -1553,7 +2202,24 @@
       return "Aprendiz Kweebec";
     }
 
+    function getTodayLocalStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function checkDailyReset() {
+      const today = getTodayLocalStr();
+      if (state.lastDailyDate !== today) {
+        state.dailyDone = 0;
+        state.dailyRewardClaimed = false;
+        state.hearts = state.maxHearts; // Recarrega as vidas no novo dia!
+        state.lastDailyDate = today;
+        saveProgress();
+      }
+    }
+
     function updateHUD() {
+      checkDailyReset();
       document.getElementById("hud-username").innerText = state.username;
       document.getElementById("hud-rank").innerText = getRankName(state.xp);
       document.getElementById("hud-hearts").innerText = `${state.hearts}/${state.maxHearts}${state.shieldActive ? "🛡️" : ""}`;
@@ -1564,6 +2230,21 @@
 
       const shopBal = document.getElementById("shop-gems-balance");
       if (shopBal) shopBal.innerText = state.gems;
+
+      // Atualiza a Meta Diária Real (0/2 -> 1/2 -> 2/2)
+      const dailyTarget = state.dailyGoal || 2;
+      const dailyCur = state.dailyDone || 0;
+      const dailyPct = Math.min(100, Math.round((dailyCur / dailyTarget) * 100));
+      const dText = document.getElementById("daily-goal-text");
+      const dBar = document.getElementById("daily-goal-bar");
+      if (dText) {
+        dText.innerText = `${dailyCur} / ${dailyTarget}${dailyCur >= dailyTarget ? " ✔" : ""}`;
+        dText.className = dailyCur >= dailyTarget ? "text-duo-green font-extrabold" : "text-duo-cyan";
+      }
+      if (dBar) {
+        dBar.style.width = `${dailyPct}%`;
+        dBar.className = `h-full transition-all duration-300 ${dailyCur >= dailyTarget ? "bg-duo-green" : "bg-duo-cyan"}`;
+      }
 
       const doneCount = state.completedQuizzes.length;
       const totText = document.getElementById("total-progress-text");
@@ -1857,18 +2538,29 @@
           renderQuizExercise();
         } else {
           playRunicSound('success');
+          checkDailyReset();
           const first = !state.completedQuizzes.includes(ch.id);
           if (first) state.completedQuizzes.push(ch.id);
           const mult = state.xpBoost ? 2 : 1;
           const xpEarned = (first ? ch.xpReward : 10) * mult;
-          const gemEarned = first ? ch.gemReward : 3;
+          let gemEarned = first ? ch.gemReward : 3;
+
+          // Incrementa a Meta Diária
+          state.dailyDone = (state.dailyDone || 0) + 1;
+          let bonusMsg = "";
+          if (state.dailyDone >= (state.dailyGoal || 2) && !state.dailyRewardClaimed) {
+            state.dailyRewardClaimed = true;
+            gemEarned += 15;
+            bonusMsg = " • 🎯 Meta Diária Batida (+15 💎)!";
+          }
+
           state.xp += xpEarned;
           state.gems += gemEarned;
           saveProgress();
           updateHUD();
           closeLessonModal();
           renderRoadmap();
-          showToast(`🏆 Capítulo ${ch.id} dominado! +${xpEarned} XP e +${gemEarned} 💎!`);
+          showToast(`🏆 Cap. ${ch.id} dominado! +${xpEarned} XP e +${gemEarned} 💎${bonusMsg}`);
         }
       }
     }
