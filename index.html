@@ -1868,26 +1868,713 @@
       }
     };
 
-    // Transforma os 100 CHAPTER_SPECS em aulas (usando a Seção 1 100% artesanal e mantendo as demais funcionais!)
+    // ================= SEÇÃO 2 ARTESANAL (CAP. 11 A 20 — ZERO REPETIÇÃO, ESTILO CODDY REAL) =================
+    const HANDCRAFTED_SECTION_2 = {
+      11: {
+        chunks: [
+          {
+            title: "1. O Laço de Repetição `while` (Enquanto)",
+            text: "Em programação, frequentemente precisamos repetir uma ação várias vezes. O laço `while` repete um bloco de código *enquanto* uma condição for verdadeira.\n\n1. O Java testa a condição **antes** de executar o bloco;\n2. Se a condição for `false` logo de cara, o bloco nunca será executado;\n3. Você DEVE atualizar a variável usada na condição dentro do bloco para evitar um *loop infinito*!",
+            code: `int ondasRestantes = 3;\n\nwhile (ondasRestantes > 0) {\n    spawnarGoblins();\n    ondasRestantes--; // Sem isso, o servidor travaria para sempre!\n}`
+          },
+          {
+            title: "2. Como funciona o `while` no Hytale",
+            text: "Imagine que você está criando um minigame onde o baú só abre se o jogador tiver a vida cheia. Você pode usar um `while` para curar o jogador aos poucos até chegar ao máximo.",
+            code: `int vidaAtual = 70;\nint vidaMaxima = 100;\n\n// Cura o jogador de 10 em 10 até encher:\nwhile (vidaAtual < vidaMaxima) {\n    vidaAtual += 10;\n    tocarSomDeCura();\n}`
+          },
+          {
+            title: "3. Outro Exemplo: O Laço `do-while`",
+            text: "Existe uma variação chamada `do-while`. A diferença? Ele executa o bloco de código **pelo menos uma vez**, porque só testa a condição no final!",
+            code: `int moedas = 0;\n\ndo {\n    darMoedaAoJogador();\n    moedas++;\n} while (moedas < 0); \n// Executa uma vez e para, mesmo que 1 não seja menor que 0!`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "O erro mais mortal com o `while` é o Loop Infinito. Se você esquecer de alterar a condição, o Java vai repetir o código tão rápido que vai travar o servidor (queda de TPS).",
+            code: `int energia = 5;\n\n// ❌ ERRADO (Loop Infinito! 'energia' nunca muda de 5):\n// while (energia > 0) {\n//     atirarRaio();\n// }\n\n// ✅ CORRETO (A condição eventually se torna falsa):\nwhile (energia > 0) {\n    atirarRaio();\n    energia--;\n}`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 11)",
+            text: "• `while (condicao)` repete o código enquanto a condição for `true`;\n• Avalia a condição **antes** de executar o bloco;\n• Sempre crie uma forma da condição se tornar `false` (como um contador) para evitar travar o programa.",
+            code: `// Preparado para os desafios de loops?`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Controle de Fluxo] Qual é a diferença fundamental entre um laço `while` e um `do-while` em Java?",
+            code: `// while vs do-while`,
+            options: [
+              "Não há diferença, são apenas sinônimos.",
+              "O `while` só funciona com números, e o `do-while` com booleanos.",
+              "O `while` testa a condição antes de executar, o `do-while` testa depois, garantindo pelo menos uma execução.",
+              "O `do-while` não precisa de chaves { }."
+            ],
+            correct: 2,
+            explanation: "O `do-while` garante a execução do bloco de código pelo menos uma vez, pois a verificação da condição (o 'while') fica no final."
+          },
+          {
+            q: "2. [Teste de Mesa] Quantas vezes o método `spawnZumbi()` será chamado pelo código abaixo?",
+            code: `int zumbis = 0;\nwhile (zumbis <= 2) {\n    spawnZumbi();\n    zumbis++;\n}`,
+            options: [
+              "Nenhuma",
+              "2 vezes",
+              "3 vezes",
+              "Infinitas vezes"
+            ],
+            correct: 2,
+            explanation: "O loop roda quando zumbis = 0, zumbis = 1, e zumbis = 2. Como usamos '<=', a condição é verdadeira para o número 2, totalizando 3 execuções."
+          },
+          {
+            q: "3. [Caça ao Bug] Por que o código abaixo cria um loop infinito indesejado?",
+            code: `int tempo = 10;\nwhile (tempo > 0) {\n    iniciarContagem();\n    tempo++;\n}`,
+            options: [
+              "O sinal de maior (>) está invertido.",
+              "A variável 'tempo' está aumentando em vez de diminuir, logo sempre será maior que 0.",
+              "Falta a palavra 'break;'.",
+              "Não se pode usar a variável 'tempo' num while."
+            ],
+            correct: 1,
+            explanation: "Como tempo começa em 10 e sofre incremento (tempo++), ele vai para 11, 12, 13... e nunca será menor ou igual a 0 para parar o loop."
+          }
+        ]
+      },
+
+      12: {
+        chunks: [
+          {
+            title: "1. O Laço `for` Clássico",
+            text: "O laço `for` é perfeito quando você sabe exatamente quantas vezes quer repetir algo (como preencher uma grade 3x3). Ele junta a inicialização, a condição e o passo em uma única linha!\n\n1. `int i = 0`: cria a variável contadora (roda só 1 vez);\n2. `i < 5`: checa a condição (roda antes de cada volta);\n3. `i++`: atualiza o contador (roda no fim de cada volta).",
+            code: `// Roda 5 vezes (i vai de 0 até 4):\nfor (int i = 0; i < 5; i++) {\n    darDiamante(player);\n}`
+          },
+          {
+            title: "2. Usando o Contador `i` dentro do Bloco",
+            text: "Você pode (e deve) usar a variável `i` dentro do bloco do `for`! Ela é muito útil para cálculos matemáticos ou acessar itens de uma lista em ordem.",
+            code: `// O Scrap Drill cava uma linha de 4 blocos!\nfor (int i = 0; i < 4; i++) {\n    quebrarBlocoNoEixoX(posicaoBase + i);\n}`
+          },
+          {
+            title: "3. Outro Exemplo: Contagem Regressiva",
+            text: "O laço `for` não precisa apenas somar. Você pode usá-lo para fazer contagens regressivas alterando a inicialização e o passo (`i--`):",
+            code: `// Contagem regressiva antes da Arena abrir:\nfor (int i = 3; i > 0; i--) {\n    anunciarNoChat(i + "...");\n}\nanunciarNoChat("GO!");`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Lembre-se: o separador dentro do `for` é o **ponto e vírgula (`;`)**, não a vírgula! Além disso, a variável criada dentro do `for` só existe dentro dele (escopo local).",
+            code: `// ❌ ERRADO (Usando vírgula e tentando usar 'i' fora):\n// for (int i = 0, i < 3, i++) { ... }\n// System.out.println(i); // Erro! 'i' já não existe mais.\n\n// ✅ CORRETO (Ponto e vírgula):\nfor (int i = 0; i < 3; i++) {\n    // Faça algo\n}`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 12)",
+            text: "• O `for` agrupa inicialização, condição e atualização na mesma linha;\n• Sintaxe: `for (inicio; condicao; passo) { }`;\n• Ideal para um número fixo e conhecido de repetições;\n• A variável declarada no `for` (geralmente `i`) morre ao final do laço.",
+            code: `// Dominando as repetições exatas!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Sintaxe do For] Qual é a estrutura correta para declarar um laço 'for' que executa 10 vezes em Java?",
+            code: `// O bloco deve rodar 10 vezes:`,
+            options: [
+              "for (int i = 0, i < 10, i++)",
+              "for (int i = 0; i < 10; i++)",
+              "for int i = 0 to 10:",
+              "for (i = 10; i > 0; i++)"
+            ],
+            correct: 1,
+            explanation: "O laço 'for' correto em Java usa ponto e vírgula (;) para separar a inicialização, a condição e o incremento: for (int i = 0; i < 10; i++)."
+          },
+          {
+            q: "2. [Teste de Mesa] Qual será o último número impresso no console por este laço?",
+            code: `for (int cont = 5; cont > 1; cont--) {\n    imprimir(cont);\n}`,
+            options: [
+              "1",
+              "5",
+              "2",
+              "0"
+            ],
+            correct: 2,
+            explanation: "O laço roda enquanto 'cont > 1'. Quando 'cont' for 2, a condição é verdadeira e ele imprime 2. Quando 'cont' virar 1, '1 > 1' é falso e o laço para, não imprimindo o 1."
+          },
+          {
+            q: "3. [Escopo de Variável] Por que o código abaixo gera um erro de compilação?",
+            code: `for (int i = 0; i < 5; i++) {\n    somarPontos();\n}\nint total = i;`,
+            options: [
+              "A variável 'total' precisa de um for.",
+              "A variável 'i' declarada na inicialização do 'for' só existe dentro do bloco do 'for' e não pode ser acessada depois.",
+              "Você não pode atribuir 'i' a 'total'.",
+              "A função somarPontos() causou o erro."
+            ],
+            correct: 1,
+            explanation: "Variáveis declaradas dentro da declaração do 'for' têm 'escopo de bloco' e são destruídas assim que o laço termina."
+          }
+        ]
+      },
+
+      13: {
+        chunks: [
+          {
+            title: "1. Controle Avançado: `break` e `continue`",
+            text: "Às vezes você precisa parar um loop antes da hora ou pular uma volta específica. Para isso, o Java tem duas palavras mágicas:\n\n1. `break`: quebra (sai) do loop IMEDIATAMENTE. Nenhuma volta adicional será rodada;\n2. `continue`: interrompe apenas a volta ATUAL e pula direto para a próxima avaliação da condição.",
+            code: `for (int i = 1; i <= 5; i++) {\n    if (i == 3) {\n        continue; // Pula a vez quando for 3!\n    }\n    if (i == 5) {\n        break; // Sai do loop antes de imprimir o 5!\n    }\n    imprimir(i); // Vai imprimir: 1, 2, 4.\n}`
+          },
+          {
+            title: "2. Poupando CPU no Servidor",
+            text: "O `break` é crucial para a performance de plugins. Se você precisa procurar um jogador banido numa lista de 1.000 nomes e o acha na 2ª posição, não faz sentido checar os outros 998!",
+            code: `boolean encontrou = false;\nfor (int i = 0; i < 1000; i++) {\n    if (lista[i].equals("Hacker123")) {\n        encontrou = true;\n        break; // Para o loop e economiza CPU!\n    }\n}`
+          },
+          {
+            title: "3. Outro Exemplo: Usando `continue` para Ignorar",
+            text: "O `continue` é perfeito para ignorar alvos inválidos numa lista de jogadores sem precisar aninhar vários `if`s gigantes:",
+            code: `// Curar jogadores, mas ignorar quem já está de vida cheia ou morto:\nfor (int i = 0; i < jogadoresOnline; i++) {\n    if (jogadorEstaMorto(i) || vidaCheia(i)) {\n        continue; // Ignora e vai para o próximo jogador\n    }\n    aplicarCura(i);\n}`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Um erro lógico comum é colocar código **depois** de um `break` ou `continue` incondicional dentro do mesmo bloco. O Java avisa que esse código é 'unreachable' (inalcançável) e nem compila!",
+            code: `// ❌ ERRADO (O código após o break nunca vai rodar):\nif (achouItem) {\n    break;\n    tocarSom(); // Erro de compilação!\n}\n\n// ✅ CORRETO:\nif (achouItem) {\n    tocarSom();\n    break;\n}`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 13)",
+            text: "• `break` termina o laço inteiro na hora;\n• `continue` aborta a iteração atual e força o laço a pular para a próxima volta;\n• Úteis para otimizar buscas e evitar processamento desnecessário;\n• Qualquer instrução colocada no mesmo bloco de código logo após `break` ou `continue` causará erro.",
+            code: `// Vamos interceptar esses loops no Quiz!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Controle de Fluxo] O que a palavra-chave 'continue' faz quando executada dentro de um laço 'for'?",
+            code: `// Uso de continue`,
+            options: [
+              "Pausa o laço até o usuário clicar.",
+              "Encerra totalmente a execução do laço.",
+              "Reinicia o laço do zero.",
+              "Pula o resto do bloco na volta atual e avança para a próxima iteração."
+            ],
+            correct: 3,
+            explanation: "O 'continue' apenas aborta a rodada atual e manda o laço testar a condição para a próxima volta."
+          },
+          {
+            q: "2. [Teste de Mesa] Analisando o uso do 'break', qual será o último número impresso neste código?",
+            code: `for (int i = 1; i <= 5; i++) {\n    if (i == 3) {\n        break;\n    }\n    imprimir(i);\n}`,
+            options: [
+              "5",
+              "4",
+              "2",
+              "3"
+            ],
+            correct: 2,
+            explanation: "O laço imprime o 1 e o 2. Quando i vira 3, a condição 'i == 3' aciona o 'break', que destrói o laço imediatamente antes do 3 ser impresso!"
+          },
+          {
+            q: "3. [Lógica de Servidor] Qual das situações abaixo é o cenário IDEAL para usar um 'break' e otimizar um plugin no Hytale?",
+            code: `// Otimizando plugins`,
+            options: [
+              "Ao aplicar dano a todos os inimigos numa área.",
+              "Ao encontrar o jogador procurado numa lista com 5.000 nomes, evitando processar os nomes restantes.",
+              "Ao calcular a soma total do xp de todos os jogadores online.",
+              "Para garantir que um loop while rode infinitamente."
+            ],
+            correct: 1,
+            explanation: "Se você encontrou o que buscava, continuar rodando o loop nas outras 4.999 posições é puro desperdício de CPU do servidor!"
+          }
+        ]
+      },
+
+      14: {
+        chunks: [
+          {
+            title: "1. Arrays Fixos (Vetores)",
+            text: "Variáveis simples guardam apenas 1 valor. Mas e se quisermos guardar uma lista de palavras proibidas? Usamos Arrays!\n\n1. Um Array é uma coleção de itens do **mesmo tipo**;\n2. Tem tamanho **fixo** (definido na criação);\n3. Usa colchetes `[]` para indicar que não é uma variável simples.",
+            code: `// Array de Strings com 3 posições:\nString[] classes = {"Kweebec", "Feran", "Trork"};\n\n// Descobrindo o tamanho do Array:\nint total = classes.length; // Retorna 3`
+          },
+          {
+            title: "2. Índices: A contagem começa do ZERO!",
+            text: "O erro mais comum ao usar Arrays é tentar acessar as posições 1, 2 e 3 para uma lista de 3 itens. Em Java, e na maioria das linguagens, a contagem de índices começa no **zero**!",
+            code: `String[] inventario = {"Espada", "Escudo", "Poção"};\n\nString primeiroItem = inventario[0]; // "Espada"\nString ultimoItem   = inventario[2]; // "Poção"\n\n// inventario[3] daria CRASH (ArrayIndexOutOfBoundsException)!`
+          },
+          {
+            title: "3. Outro Exemplo: Arrays Vazios e Preenchimento",
+            text: "Você não precisa saber os valores na hora de criar o Array. Você pode criar um Array vazio informando apenas o tamanho dele com `new`, e depois colocar os dados nas posições:",
+            code: `// Cria um Array de 5 posições (índices 0 a 4), todas vazias (0 ou null):\nint[] topScores = new int[5];\n\n// Preenchendo depois:\ntopScores[0] = 5000;\ntopScores[1] = 4200;`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Lembre-se de duas coisas: Arrays não podem mudar de tamanho depois de criados com `new int[Tamanho]`, e tentar acessar um índice além do tamanho máximo causará um crash fatal no seu plugin.",
+            code: `String[] nomes = new String[2];\nnomes[0] = "Tomy";\nnomes[1] = "Pasqual";\n\n// ❌ ERRADO (A lista só tem 2 posições, e você tentou acessar a 3ª!):\n// nomes[2] = "Kaupenjoe"; // CRASH na thread do servidor!\n\n// ✅ CORRETO (Respeitar o limite definido):`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 14)",
+            text: "• `Tipo[] nome` declara um Array;\n• `new Tipo[tamanho]` cria as gavetas vazias;\n• `nome.length` devolve o tamanho total (sem parênteses);\n• O primeiro elemento é o `[0]` e o último é o `[length - 1]`;\n• Arrays não crescem de tamanho dinamicamente.",
+            code: `// Dominando os vetores básicos!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Sintaxe e Índices] Em um Array chamado 'armas' que possui 4 itens, qual é o índice correto para acessar o ÚLTIMO item da lista?",
+            code: `String[] armas = {"Faca", "Espada", "Arco", "Cajado"};`,
+            options: [
+              "armas[4]",
+              "armas[3]",
+              "armas[last]",
+              "armas.ultimo()"
+            ],
+            correct: 1,
+            explanation: "Como a contagem inicia em 0, os índices para 4 itens são 0, 1, 2 e 3. O índice do último item é sempre (length - 1)!"
+          },
+          {
+            q: "2. [Criação de Arrays] Qual das alternativas abaixo cria corretamente um Array de inteiros, inicialmente vazio, mas com espaço reservado para guardar 10 números?",
+            code: `// Criando Array vazio`,
+            options: [
+              "int[] numeros = new int[10];",
+              "int numeros = new Array(10);",
+              "int[10] numeros = {};",
+              "Array<int> numeros = new Array<int>(10);"
+            ],
+            correct: 0,
+            explanation: "A sintaxe em Java para criar um Array de tamanho fixo sem inicializar com os dados é: Tipo[] nome = new Tipo[Tamanho];"
+          },
+          {
+            q: "3. [Caça ao Bug] Por que a execução da linha 3 do código abaixo gerará um erro e fechará o programa?",
+            code: `String[] biomas = {"Deserto", "Pântano"};\nint tamanho = biomas.length;\nString teste = biomas[tamanho];`,
+            options: [
+              "Porque não se pode usar uma variável inteira dentro dos colchetes [ ].",
+              "Porque o Array 'biomas' tem tamanho 2, e tentar acessar biomas[2] resulta em ArrayIndexOutOfBoundsException.",
+              "Porque a propriedade .length precisa de parênteses ().",
+              "Porque 'biomas' está vazio."
+            ],
+            correct: 1,
+            explanation: "O tamanho (length) é 2. Porém, como os índices são 0 e 1, tentar ler biomas[2] tenta acessar uma gaveta que não existe fora do Array!"
+          }
+        ]
+      },
+
+      15: {
+        chunks: [
+          {
+            title: "1. O Laço `For-Each` (Enhanced For)",
+            text: "O laço `for` clássico é bom, mas o Java oferece uma forma muito mais limpa para ler itens de um Array do começo ao fim: o **For-Each**!\n\n1. Sintaxe: `for (Tipo variavelTemporaria : colecao)`\n2. Os dois-pontos `:` significam 'para cada';\n3. Ele cria a variável, pega o valor do Array, executa o bloco, e avança para o próximo sozinho!",
+            code: `String[] cores = {"Vermelho", "Azul", "Verde"};\n\n// Lemos como: "Para cada 'cor' na lista 'cores'..."\nfor (String cor : cores) {\n    System.out.println(cor);\n}`
+          },
+          {
+            title: "2. For-Each vs. For Clássico",
+            text: "Por que usar o For-Each? Ele impede que você acesse acidentalmente índices fora do limite do Array (evitando o temido `ArrayIndexOutOfBoundsException`) e o código fica mais fácil de ler.",
+            code: `// For Clássico (sujeito a erros se errar o limite):\nfor (int i = 0; i < itens.length; i++) {\n    usarItem(itens[i]);\n}\n\n// For-Each (limpo, seguro e direto):\nfor (String item : itens) {\n    usarItem(item);\n}`
+          },
+          {
+            title: "3. Outro Exemplo: Achando algo na lista",
+            text: "O For-Each brilha em sistemas de filtro de chat. Você joga a mensagem contra cada palavra proibida na lista:",
+            code: `String msgJogador = "você é bobo!";\nString[] filtro = {"bobo", "feio", "chato"};\n\nfor (String palavraRuim : filtro) {\n    if (msgJogador.contains(palavraRuim)) {\n        punirJogador();\n        break;\n    }\n}`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Embora o For-Each seja ótimo para *ler* e buscar, você **não consegue usá-lo para modificar os valores dentro do Array original**, pois ele usa uma cópia do valor!",
+            code: `int[] notas = {5, 6, 7};\n\n// ❌ ERRADO (Não muda o Array, apenas a variável temporária!):\nfor (int n : notas) {\n    n = 10;\n}\n\n// ✅ CORRETO (Para alterar, precisa do For clássico com o índice):\nfor (int i = 0; i < notas.length; i++) {\n    notas[i] = 10;\n}`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 15)",
+            text: "• Sintaxe: `for (Tipo item : colecao) { ... }`;\n• Excelente para percorrer o Array inteiro com segurança;\n• Não fornece a posição/índice (`i`);\n• Só serve para **leitura**, alterar a variável do loop não altera o elemento original do Array.",
+            code: `// Simplificando varreduras de lista!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Sintaxe For-Each] Qual é o separador correto utilizado no For-Each do Java para indicar 'para cada item na coleção'?",
+            code: `// Sintaxe de iteração segura:`,
+            options: [
+              "Uma vírgula (,)",
+              "Um sinal de igual (=)",
+              "A palavra-chave 'in'",
+              "Dois-pontos (:)"
+            ],
+            correct: 3,
+            explanation: "No Java, o laço Enhanced For (For-Each) utiliza dois-pontos (:) para separar a variável temporária do Array/Coleção."
+          },
+          {
+            q: "2. [Leitura de Código] Qual é a diferença fundamental entre as duas abordagens ao usar For-Each?",
+            code: `for (String membro : claKweebec) {\n    anunciar(membro);\n}`,
+            options: [
+              "O For-Each é mais lento e gasta mais RAM.",
+              "O For-Each não permite o uso do 'break'.",
+              "O For-Each não oferece acesso ao índice numérico (a posição) do item que está sendo lido.",
+              "O For-Each não aceita Arrays de inteiros."
+            ],
+            correct: 2,
+            explanation: "Como a variável do loop recebe diretamente o valor do item, você não sabe se está na posição 0, 1 ou 5 do Array. Se precisar do índice numérico, deve usar o for clássico."
+          },
+          {
+            q: "3. [Caça ao Bug] O desenvolvedor quer adicionar +5 de dano em todas as armas do Array. Por que o código abaixo NÃO altera os valores do Array original?",
+            code: `int[] danoArmas = {10, 20, 30};\nfor (int d : danoArmas) {\n    d += 5;\n}`,
+            options: [
+              "Porque o '+=' não funciona com variáveis locais.",
+              "Porque a variável 'd' é apenas uma cópia de leitura. Alterar 'd' não altera as caixas do Array 'danoArmas'.",
+              "Porque falta ponto e vírgula no for.",
+              "Porque Arrays não aceitam adição."
+            ],
+            correct: 1,
+            explanation: "O For-Each atribui uma cópia do valor à variável temporária. Para modificar dados guardados dentro de um Array, você precisa acessar diretamente a posição com 'array[i] = novoValor;' usando um laço for clássico."
+          }
+        ]
+      },
+
+      16: {
+        chunks: [
+          {
+            title: "1. Listas Dinâmicas (`ArrayList`)",
+            text: "Arrays são rápidos, mas não podem mudar de tamanho. E se quisermos gerenciar uma fila de jogadores que não tem tamanho fixo? Usamos a famosa `ArrayList`!\n\n1. É uma lista expansível: cresce e encolhe sozinha;\n2. Usa os métodos `.add()` e `.remove()`;\n3. Funciona com a interface `List` (o que é uma ótima prática em Java).",
+            code: `import java.util.ArrayList;\nimport java.util.List;\n\n// Cria a Lista vazia (os diamantes <> indicam o tipo String):\nList<String> jogadoresArena = new ArrayList<>();`
+          },
+          {
+            title: "2. Métodos Essenciais da ArrayList",
+            text: "Ao contrário dos Arrays (que usavam `.length` e `[i]`), as Listas usam métodos da orientação a objetos para tudo:",
+            code: `jogadoresArena.add("Tomy");    // Adiciona ao final\njogadoresArena.add("Pasqual");\n\nint total = jogadoresArena.size();        // Retorna o tamanho (2)\nboolean temTomy = jogadoresArena.contains("Tomy"); // Retorna true\n\njogadoresArena.remove("Pasqual"); // Encolhe a lista e tira o Pasqual`
+          },
+          {
+            title: "3. Outro Exemplo: Limpando e Buscando",
+            text: "No fim de uma partida, em vez de remover um por um, você limpa a ArrayList inteira com um comando:",
+            code: `// ... fim da partida ...\njogadoresArena.clear(); // Esvazia toda a lista na hora\n\nif (jogadoresArena.isEmpty()) {\n    anunciarNoConsole("Arena vazia, pronta para o próximo round!");\n}`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Um detalhe técnico vital do Java: Listas Dinâmicas (`ArrayList`) **NÃO aceitam tipos primitivos** (`int`, `double`, `boolean`) dentro dos diamantes `< >`! Elas só aceitam Objetos.\n\nUse as Classes Wrapper: `Integer`, `Double`, `Boolean`.",
+            code: `// ❌ ERRADO (Não compila, int é tipo primitivo):\n// List<int> pontuacoes = new ArrayList<>();\n\n// ✅ CORRETO (Usando a Classe Wrapper 'Integer'):\nList<Integer> pontuacoes = new ArrayList<>();`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 16)",
+            text: "• Use `List<Tipo>` para criar listas flexíveis;\n• `.add()` insere e `.remove()` deleta itens;\n• Use `.size()` para verificar o tamanho (note os parênteses!);\n• Coleções (`ArrayList`, `HashMap`) usam `Integer` e `Double` em vez de `int` e `double`.",
+            code: `// Pratique a expansão infinita das Listas!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Sintaxe ArrayList] Qual método da classe ArrayList do Java verifica se a lista está completamente vazia sem precisar checar o tamanho (size)?",
+            code: `if (minhaLista.___________()) {\n    // Faz algo\n}`,
+            options: [
+              "isEmpty",
+              "isNull",
+              "isClear",
+              "hasNone"
+            ],
+            correct: 0,
+            explanation: "O método .isEmpty() retorna true se a lista não contiver nenhum elemento."
+          },
+          {
+            q: "2. [Tipos Genéricos e Wrappers] Qual é a maneira correta de declarar uma ArrayList para armazenar números com casas decimais (float) no Java 25?",
+            code: `// Criando lista de floats:`,
+            options: [
+              "List<float> decs = new ArrayList<>();",
+              "List<Float> decs = new ArrayList<>();",
+              "ArrayList(float) decs = new List();",
+              "float[] decs = new ArrayList();"
+            ],
+            correct: 1,
+            explanation: "Coleções no Java exigem Classes (Objetos) dentro dos '< >'. O tipo primitivo 'float' deve ser representado por sua classe Wrapper 'Float' com 'F' maiúsculo."
+          },
+          {
+            q: "3. [Teste de Mesa] Após rodar os comandos abaixo, qual será o retorno do método `participantes.size()`?",
+            code: `List<String> participantes = new ArrayList<>();\nparticipantes.add("Alice");\nparticipantes.add("Bob");\nparticipantes.add("Charlie");\nparticipantes.remove("Bob");`,
+            options: [
+              "1",
+              "2",
+              "3",
+              "0"
+            ],
+            correct: 1,
+            explanation: "Você adicionou 3 itens e depois chamou o .remove() para retirar um deles ('Bob'). Portanto, sobraram 2 elementos na ArrayList!"
+          }
+        ]
+      },
+
+      17: {
+        chunks: [
+          {
+            title: "1. Estruturas Chave-Valor (`HashMap`)",
+            text: "Se você precisa guardar as moedas de um jogador, uma `List` não ajuda muito (como você saberia de quem é qual moeda?). Precisamos de um Dicionário! No Java, isso é o `HashMap`.\n\n1. Liga uma **Chave** (ex: o nome \"Tomy\") a um **Valor** (ex: 500 moedas);\n2. As Chaves são únicas (não podem haver dois \"Tomy\");\n3. A busca pelo valor a partir da chave é instantânea (complexidade `O(1)`).",
+            code: `import java.util.HashMap;\nimport java.util.Map;\n\n// Chave é String, Valor é Integer:\nMap<String, Integer> bancoDeOrbis = new HashMap<>();`
+          },
+          {
+            title: "2. `put`, `get` e `remove` no HashMap",
+            text: "Os métodos fundamentais do Mapa são simples:",
+            code: `// Adiciona ou Atualiza:\nbancoDeOrbis.put("Tomy", 500);\nbancoDeOrbis.put("Pasqual", 250);\n\n// Busca pelo Valor:\nint moedasTomy = bancoDeOrbis.get("Tomy"); // Retorna 500\n\n// Remove a Chave e o Valor:\nbancoDeOrbis.remove("Pasqual");`
+          },
+          {
+            title: "3. Outro Exemplo: Segurança com `getOrDefault`",
+            text: "O que acontece se procurarmos um jogador que nunca entrou no servidor? O método `.get()` vai retornar `null`, o que pode causar um Crash! A solução perfeita é o `getOrDefault`:",
+            code: `// Tenta buscar "Novato". Se não achar a chave, devolve o valor padrão (0) em vez de null!\nint saldoDesconhecido = bancoDeOrbis.getOrDefault("Novato", 0);`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Lembre-se: Chaves duplicadas não são permitidas. Se você usar o `.put` numa chave que já existe, o Dicionário **sobrescreve** o valor antigo!",
+            code: `Map<String, String> classes = new HashMap<>();\nclasses.put("Tomy", "Kweebec");\n\n// ❌ Isso não cria um segundo Tomy; substitui o primeiro!\nclasses.put("Tomy", "Feran"); \n\n// O valor final para a chave "Tomy" será "Feran".`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 17)",
+            text: "• `Map<Chave, Valor>` associa identificadores a informações;\n• `.put(K, V)` salva ou atualiza dados;\n• `.get(K)` recupera os dados, mas pode dar erro (null) se a chave não existir;\n• `.getOrDefault(K, V_padrao)` é o jeito mais seguro de buscar.",
+            code: `// O Hashmap é o pilar dos sistemas de economia em plugins!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Mapas Chave-Valor] Qual método é usado para buscar um valor com segurança num HashMap, indicando um valor reserva caso a chave procurada não exista?",
+            code: `// Prevenindo nulls:`,
+            options: [
+              "getOrFallback()",
+              "getOrDefault()",
+              "findSafe()",
+              "fetch()",
+            ],
+            correct: 1,
+            explanation: "O getOrDefault(chave, valorPadrao) foi introduzido para evitar a verificação chata de nulls ao acessar Mapas."
+          },
+          {
+            q: "2. [Teste de Mesa] Qual será o tamanho (número de pares chave-valor) retornado por 'registro.size()'?",
+            code: `Map<String, Integer> registro = new HashMap<>();\nregistro.put("Alfa", 10);\nregistro.put("Beta", 20);\nregistro.put("Alfa", 30);`,
+            options: [
+              "1",
+              "2",
+              "3",
+              "Erro de Compilação"
+            ],
+            correct: 1,
+            explanation: "HashMaps não permitem chaves duplicadas. O segundo 'put(\"Alfa\", 30)' apenas substituiu o valor da chave que já existia. Apenas as chaves \"Alfa\" e \"Beta\" estão presentes."
+          },
+          {
+            q: "3. [Lógica Prática] Ao criar um sistema que associa uma arma a um dano fixo (ex: \"Espada\" -> 15.5f), como a variável deve ser declarada?",
+            code: `// Declarando o Mapa`,
+            options: [
+              "Map<String, Float> danos = new HashMap<>();",
+              "Map<String, float> danos = new HashMap<>();",
+              "Map<Float, String> danos = new HashMap<>();",
+              "List<String, Float> danos = new ArrayList<>();"
+            ],
+            correct: 0,
+            explanation: "O Mapa associa Chaves a Valores. Como a arma é texto (String) e o dano é decimal, a ordem é <String, Float>. Além disso, precisamos usar 'Float' (Wrapper class) em vez do primitivo 'float'."
+          }
+        ]
+      },
+
+      18: {
+        chunks: [
+          {
+            title: "1. Conjuntos Únicos (`HashSet`)",
+            text: "Às vezes você só quer manter uma lista simples, mas precisa garantir que **ninguém entre duplicado**. Se usarmos uma `List`, precisaríamos fazer checagens manuais lentas. O Java resolve isso com a coleção `Set` (Conjunto) através da classe `HashSet`!\n\n1. Não admite valores repetidos;\n2. A busca com `.contains()` é ultra-rápida (não importa se a lista tem 10 itens ou 10 milhões);\n3. Os itens **não têm ordem garantida** (não dá para pedir o \"primeiro\" da lista).",
+            code: `import java.util.HashSet;\nimport java.util.Set;\n\nSet<String> jaResgatouDiaria = new HashSet<>();`
+          },
+          {
+            title: "2. A Mágica do `.add()` no Set",
+            text: "O método `.add()` no `Set` funciona como um segurança de boate. Ele olha para a lista e, se o item já estiver lá, ele ignora a adição e devolve `false` silenciosamente (sem dar erros/crash).",
+            code: `jaResgatouDiaria.add("Tomy"); // Retorna true (adicionou)\njaResgatouDiaria.add("Tomy"); // Retorna false (já existe, ignora!)`
+          },
+          {
+            title: "3. Outro Exemplo: Listas de VIPs",
+            text: "Sets são excelentes para guardar permissões ou tags ativas. Quando o servidor quer checar se um jogador pode entrar num portal VIP, o `Set` responde instantaneamente.",
+            code: `Set<String> vips = new HashSet<>();\nvips.add("Kaupenjoe");\nvips.add("Britakee");\n\n// Checagem relâmpago O(1):\nif (vips.contains(jogador.getName())) {\n    abrirPortalVip();\n}`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Se você precisa que a lista seja lida na exata ordem em que os itens foram inseridos ou ordenados alfabeticamente, **NÃO use o `HashSet` padrão**. O `HashSet` espalha os itens na memória e os devolve numa ordem aleatória!\n\nUse `LinkedHashSet` se a ordem de inserção importar.",
+            code: `// ❌ ERRADO (O HashSet não mantém a ordem; o primeiro adicionado pode sair por último):\n// for (String nome : meuHashSet) { ... }\n\n// ✅ CORRETO (Para manter a ordem de inserção, use uma Lista ou LinkedHashSet):`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 18)",
+            text: "• `Set` (via `HashSet`) armazena itens e barra automaticamente as duplicatas;\n• Suas checagens de pertencimento (`.contains`) são instantâneas;\n• Os itens não têm índice numérico e ficam fora de ordem;\n• Use `List` para itens ordenados/repetidos, e `Set` para coleções exclusivas.",
+            code: `// Checagens em milissegundos!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Características das Coleções] Qual estrutura de dados do Java tem como principal característica a impossibilidade de manter elementos duplicados?",
+            code: `// Coleção Exclusiva:`,
+            options: [
+              "ArrayList",
+              "Array nativo (String[])",
+              "HashSet",
+              "HashMap"
+            ],
+            correct: 2,
+            explanation: "O HashSet, que implementa a interface Set da matemática (Conjunto), garante que nenhum item apareça duas vezes na mesma coleção."
+          },
+          {
+            q: "2. [Teste de Mesa] Qual será o tamanho do Set após a execução dos comandos abaixo?",
+            code: `Set<Integer> numerosDaSorte = new HashSet<>();\nnumerosDaSorte.add(7);\nnumerosDaSorte.add(13);\nnumerosDaSorte.add(7);`,
+            options: [
+              "1",
+              "2",
+              "3",
+              "0"
+            ],
+            correct: 1,
+            explanation: "Ao tentar adicionar o número 7 pela segunda vez, o Set percebe a duplicata e a descarta. Logo, o Set contém apenas o 7 e o 13 (tamanho 2)."
+          },
+          {
+            q: "3. [Lógica de Performance] Por que um HashSet é melhor que uma ArrayList para armazenar os IDs dos jogadores bloqueados num filtro de chat?",
+            code: `// Performance em servidores:`,
+            options: [
+              "Porque o HashSet gasta menos linhas de código.",
+              "Porque a ArrayList é proibida em plugins Hytale.",
+              "Porque usar .contains() num HashSet é quase instantâneo, enquanto numa ArrayList o servidor teria que ler nome por nome até achar.",
+              "Porque o HashSet aceita ints primitivos."
+            ],
+            correct: 2,
+            explanation: "O HashSet utiliza uma 'tabela de dispersão' (hash) na memória, conseguindo dizer se um elemento está presente na coleção quase imediatamente, independente do tamanho da lista."
+          }
+        ]
+      },
+
+      19: {
+        chunks: [
+          {
+            title: "1. Matrizes: Arrays de Arrays (Grades 2D)",
+            text: "Muitas vezes, uma única linha (Array) não basta. Para mapas de RPG, caixas de colisão volumétricas ou mineração de áreas como a da furadeira *Scrap Drill*, usamos as **Matrizes 2D**.\n\n1. Uma matriz é um Array onde cada item é outro Array;\n2. É declarada com dois colchetes `[][]` (um para linhas, um para colunas);\n3. O acesso usa coordenadas `[x][y]`.",
+            code: `// Cria uma grade 3x3 vazia (tudo 0):\nint[][] tabuleiro = new int[3][3];`
+          },
+          {
+            title: "2. Acessando Posições Específicas",
+            text: "Pense na Matriz 2D como uma planilha do Excel. O primeiro índice escolhe a linha, e o segundo índice escolhe a coluna.",
+            code: `//  Col 0  Col 1\n// [ 0,0 ][ 0,1 ] Linha 0\n// [ 1,0 ][ 1,1 ] Linha 1\n\ntabuleiro[0][0] = 5; // Canto superior esquerdo!\ntabuleiro[2][2] = 9; // Canto inferior direito (tamanho 3x3)`
+          },
+          {
+            title: "3. Outro Exemplo: Varrendo a Grade com `for` Duplo",
+            text: "O padrão clássico para ler ou preencher uma Matriz inteira é usar laços `for` aninhados (um `for` dentro do outro).",
+            code: `// Percorrendo a grade 2x2 do Scrap Drill:\nfor (int x = 0; x < 2; x++) {\n    for (int y = 0; y < 2; y++) {\n        quebrarBlocoDaGrade(x, y);\n    }\n}`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "As matrizes não precisam ser perfeitamente retangulares, mas se você tentar inicializar os valores diretamente sem avisar as chaves internas `{}`, o compilador barrará o código.",
+            code: `// ❌ ERRADO (Sintaxe incorreta para preencher direto):\n// int[][] mapa = {1, 2, 3, 4};\n\n// ✅ CORRETO (Cada linha fica dentro de chaves internas):\nint[][] mapa = {\n    {1, 2}, // Linha 0\n    {3, 4}  // Linha 1\n};`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 19)",
+            text: "• `Tipo[][]` cria matrizes de duas dimensões;\n• Acesse os elementos com `grade[linha][coluna]`;\n• Laços `for` aninhados (um para `x`, um para `y`) varrem toda a área;\n• Ideal para coordenadas cartesianas e jogos de tabuleiro.",
+            code: `// Dominando o eixo X e Y nas coordenadas!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Declaração de Matrizes] Qual a sintaxe exata para criar uma matriz bidimensional (2D) 4x4 em Java pronta para receber dados int?",
+            code: `// Alocando espaço para 16 elementos:`,
+            options: [
+              "int[4,4] area = new int[];",
+              "int[][] area = new int[4][4];",
+              "int area[][] = new int(4)(4);",
+              "Array<Array<int>> area = new Array<>();"
+            ],
+            correct: 1,
+            explanation: "Em Java, matrizes bidimensionais são definidas com pares separados de colchetes, tanto na declaração quanto na inicialização com 'new'."
+          },
+          {
+            q: "2. [Teste de Mesa] Qual valor será impresso no console ao executarmos a linha de impressão (println)?",
+            code: `int[][] terreno = {\n    {10, 20},\n    {30, 40}\n};\nSystem.out.println(terreno[1][0]);`,
+            options: [
+              "10",
+              "20",
+              "30",
+              "40"
+            ],
+            correct: 2,
+            explanation: "O índice '1' pega a SEGUNDA linha: {30, 40}. O índice '0' pega o PRIMEIRO elemento daquela linha: 30."
+          },
+          {
+            q: "3. [Lógica de Loops] Ao varrer uma matriz usando loops 'for' aninhados, o laço de dentro ou o laço de fora repete mais vezes?",
+            code: `for (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 3; j++) {\n        // Quem repete mais?\n    }\n}`,
+            options: [
+              "Eles repetem a mesma quantidade de vezes.",
+              "O laço de fora repete mais vezes.",
+              "A cada iteração (volta) do laço de fora, o laço de DENTRO completa todo o seu ciclo do zero. Logo, o código mais interno roda mais vezes.",
+              "É aleatório."
+            ],
+            correct: 2,
+            explanation: "O laço externo roda 3 vezes. Mas, a CADA UMA dessas 3 vezes, o laço interno roda 3 vezes. Então o comando de dentro executa 3 x 3 = 9 vezes no total!"
+          }
+        ]
+      },
+
+      20: {
+        chunks: [
+          {
+            title: "1. Removendo Itens com Segurança (`removeIf`)",
+            text: "Um dos crashes mais horripilantes que apavoram desenvolvedores sêniors é o `ConcurrentModificationException`. Ele acontece quando você tenta deletar itens de uma Lista enquanto usa um laço `For-Each` para varrê-la!\n\n1. O `For-Each` entra em pânico se o tamanho da lista mudar no meio da leitura;\n2. Antigamente as pessoas usavam um `Iterator` verboso e feio;\n3. No Java 25, salvamos o mundo em 1 linha com o método **`.removeIf()`** e Lambdas!",
+            code: `List<String> monstros = new ArrayList<>();\nmonstros.add("Goblin");\nmonstros.add("Kweebec");\n\n// 💥 O CRASH CLÁSSICO:\n// for (String m : monstros) {\n//     if (m.equals("Kweebec")) monstros.remove(m);\n// }`
+          },
+          {
+            title: "2. O milagre do Lambda: `item -> condição`",
+            text: "A solução é chamar o método `.removeIf()` passando uma expressão lambda: uma miniregra (função rápida) que o Java aplica sozinho a todos os elementos da lista de forma segura.",
+            code: `// Limpa com segurança e numa linha só (Lê-se: remova se o nome for Kweebec):\nmonstros.removeIf(nome -> nome.equals("Kweebec"));`
+          },
+          {
+            title: "3. Outro Exemplo: Aplicado ao Hytale ECS",
+            text: "O `.removeIf()` não funciona só para Strings. Você pode vasculhar a lista de todos os inimigos ao redor e remover todos que já estiverem mortos, checando os métodos de classe dentro da lambda:",
+            code: `// 'p' representa a variável temporária do Player durante a varredura!\n// Exclui com segurança da arena todos os jogadores com 0 de vida:\nfilaDaArena.removeIf(p -> p.getHealth() <= 0);`
+          },
+          {
+            title: "4. Armadilha Comum: ❌ Errado vs ✅ Correto",
+            text: "Ao fazer limpezas manuais com laços `for` clássicos (onde tentam escapar do erro do `For-Each`), a remoção muda as posições da lista (os itens deslizam para a esquerda), e o loop 'pula' a verificação de alguns elementos!",
+            code: `// ❌ ERRADO (Bug silencioso! O item ao lado pula a checagem):\nfor (int i = 0; i < lista.size(); i++) {\n    if (lista.get(i).equals("Lixo")) lista.remove(i);\n}\n\n// ✅ CORRETO (Deixa o Java fazer o trabalho sujo por baixo dos panos):\nlista.removeIf(item -> item.equals("Lixo"));`
+          },
+          {
+            title: "5. Resumo de Bolso (Cap. 20 — Fim da Seção 2!)",
+            text: "• **NUNCA** adicione ou remova elementos de uma Lista enquanto a percorre com `For-Each`;\n• Use o método moderno `.removeIf(lambda)` das coleções Java;\n• Expressões lambda `(x -> condicao)` deixam o código elegante e evitam `ConcurrentModificationException`.\n\nE com isso você dominou os Loops e Listas!",
+            code: `// Prepare-se para se graduar na Seção 2 do HyCoddy Pro!`
+          }
+        ],
+        exercises: [
+          {
+            q: "1. [Prevenção de Crash] Qual famoso Erro (Exception) o Java joga na sua cara se você usar '.remove()' para apagar um item diretamente de dentro de um laço For-Each?",
+            code: `// Removendo no loop errado`,
+            options: [
+              "NullPointerException",
+              "ArrayIndexOutOfBoundsException",
+              "ConcurrentModificationException",
+              "ClassCastException"
+            ],
+            correct: 2,
+            explanation: "O iterador que controla o For-Each nota que a coleção foi modificada por trás dele e aborta a execução disparando uma ConcurrentModificationException!"
+          },
+          {
+            q: "2. [Lógica Funcional] Qual código usa a lambda correta do Java 25 para apagar todos os baús vazios da lista 'baus'?",
+            code: `List<Chest> baus = buscarBaus();`,
+            options: [
+              "baus.removeIf(b -> b.isEmpty());",
+              "baus.removeIf(b == empty);",
+              "baus.delete(b => b.isEmpty());",
+              "baus.remove(all.isEmpty());"
+            ],
+            correct: 0,
+            explanation: "A sintaxe da Lambda em Java usa a setinha fina '->'. A variável temporária 'b' pega cada baú, e o '.removeIf' deleta o baú caso a condição da direita retorne true."
+          },
+          {
+            q: "3. [Teste de Mesa Seguro] O que restará na lista 'nomes' ao término da operação?",
+            code: `List<String> nomes = new ArrayList<>(List.of("Leo", "Lara", "Beto", "Luan"));\nnomes.removeIf(n -> n.startsWith("L"));`,
+            options: [
+              "Todos, porque removeIf retorna erro",
+              "Apenas 'Beto'",
+              "Lara e Beto",
+              "Nenhum, a lista ficará vazia"
+            ],
+            correct: 1,
+            explanation: "A lambda manda o Java testar cada nome. 'Leo', 'Lara' e 'Luan' começam com 'L', então o método remove os três de forma 100% segura. Só o 'Beto' sobrevive!"
+          }
+        ]
+      }
+    };
+
+    // Transforma os 100 CHAPTER_SPECS em aulas profundas de 5 etapas + 3 exercícios técnicos reais!
     const CURRICULUM_100 = CHAPTER_SPECS.map((raw, idx) => {
       const id = idx + 1;
       const [sec, title, subtitle, c1, code, c2, q1, opts1, ans1, exp1] = raw;
 
-      // Se o capítulo estiver no catálogo artesanal (Cap. 1 a 10), usa o conteúdo exclusivo feito à mão!
+      // Usando os conteúdos exclusivos feitos à mão das seções!
       if (HANDCRAFTED_SECTION_1[id]) {
         return {
-          id,
-          section: sec,
-          title: `Cap. ${id}: ${title}`,
-          shortTitle: title,
-          subtitle,
-          xpReward: 20 + (sec * 2),
-          gemReward: 8 + sec,
+          id, section: sec, title: `Cap. ${id}: ${title}`, shortTitle: title, subtitle,
+          xpReward: 20 + (sec * 2), gemReward: 8 + sec,
           chunks: HANDCRAFTED_SECTION_1[id].chunks,
           exercises: HANDCRAFTED_SECTION_1[id].exercises
         };
       }
+      if (HANDCRAFTED_SECTION_2[id]) {
+        return {
+          id, section: sec, title: `Cap. ${id}: ${title}`, shortTitle: title, subtitle,
+          xpReward: 20 + (sec * 2), gemReward: 8 + sec,
+          chunks: HANDCRAFTED_SECTION_2[id].chunks,
+          exercises: HANDCRAFTED_SECTION_2[id].exercises
+        };
+      }
 
+      // Restante (gerado)
       const extra = buildSecondExampleAndPitfall(id, sec, title, code, subtitle);
       const lineByLine = dissectCodeLineByLine(code, sec, title);
       const codeLines = code.split("\n").filter(l => l.trim() && !l.trim().startsWith("//"));
@@ -1906,13 +2593,8 @@
       for (let i = 0; i < 4; i++) rotatedOpts[(i + shift) % 4] = ex3Options[i];
 
       return {
-        id,
-        section: sec,
-        title: `Cap. ${id}: ${title}`,
-        shortTitle: title,
-        subtitle,
-        xpReward: 20 + (sec * 2),
-        gemReward: 8 + sec,
+        id, section: sec, title: `Cap. ${id}: ${title}`, shortTitle: title, subtitle,
+        xpReward: 20 + (sec * 2), gemReward: 8 + sec,
         chunks: [
           { title: `1. Conceito & Fundamento — ${title}`, text: `${c1}\n\n💡 Contexto no Hytale: ${subtitle}.`, code: null },
           { title: `2. Estrutura & Sintaxe na Prática (JDK 25 / v0.7.2)`, text: `Observe como implementamos **${title}** no código abaixo:\n\n${lineByLine}`, code: code },
